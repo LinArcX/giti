@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<schemalist>
+    <schema path="/com/github/linarcx/giti/" id="com.github.linarcx.giti">
+        <key name="pos-x" type="i">
+            <default>360</default>
+            <summary>Horizontal position</summary>
+            <description>The saved horizontal position of application</description>
+        </key>
+        <key name="pos-y" type="i">
+            <default>360</default>
+            <summary>Vertical position</summary>
+            <description>The saved vertical position of application</description>
+        </key>
+        <key name="window-width" type="i">
+            <default>400</default>
+            <summary>Window width</summary>
+            <description>The width of applicatin window</description>
+        </key>
+        <key name="window-height" type="i">
+            <default>300</default>
+            <summary>Window heigth</summary>
+            <description>The heigth of applicatin window</description>
+        </key>
+        <key name="directories" type="as">
+            <default>[]</default>
+            <summary>Git directories</summary>
+            <description>List of all directories that giti will watch</description>
+        </key>
+    </schema>
+</schemalist>
