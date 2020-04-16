@@ -1,5 +1,5 @@
 <h4 align="center">
-    <img src="assets/giti.svg" align="center" width="100"/>
+    <img src="assets/mascot.svg" align="center" width="100"/>
 </h4>
 
 <h4 align="center">
