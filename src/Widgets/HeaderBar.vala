@@ -1,13 +1,12 @@
 public class giti.HeaderBar : Gtk.HeaderBar {
 
+    string[] m_dirs = {} ;
     public File m_repo_path { get ; set ; }
     public Ggit.Repository m_repo { get ; set ; }
+    public giti.Window main_window { get ; construct ; }
     public giti.GridStaged m_staged { get ; construct ; }
     public giti.GridUntracked m_untracked { get ; construct ; }
 
-
-    string[] m_dirs = {} ;
-    public giti.Window main_window { get ; construct ; }
     enum Column {
         DIRNAME
     }
@@ -19,8 +18,17 @@ public class giti.HeaderBar : Gtk.HeaderBar {
             ) ;
     }
 
+    private string get_relative_path(string ugly) {
+        string[] sub_path = ugly.split ("/") ;
+        int size_sub_path = sub_path.length ;
+        string project_name = sub_path[size_sub_path - 1] ;
+        string parent_directory = sub_path[size_sub_path - 2] ;
+        string relative_path = parent_directory + "/" + project_name ;
+        return relative_path ;
+    }
+
     void item_changed(Gtk.ComboBox combo) {
-        print ("You chose " + m_dirs[combo.get_active ()] + "\n") ;
+        // print ("You chose " + m_dirs[combo.get_active ()] + "\n") ;
         m_untracked.load_page (m_dirs[combo.get_active ()]) ;
     }
 
@@ -41,13 +49,17 @@ public class giti.HeaderBar : Gtk.HeaderBar {
                 } else {
                     print ("Hola! New directory found!\n") ;
                     m_dirs += full_path ;
+                    // re-update liststore to fetch new items
+
+                    string relative_path = get_relative_path (full_path) ;
 
                     Gtk.TreeIter iter ;
                     liststore.append (out iter) ;
-                    liststore.set (iter, Column.DIRNAME, full_path) ;
+                    liststore.set (iter, Column.DIRNAME, relative_path) ;
                 }
                 main_window.settings.set_strv ("directories", m_dirs) ;
             } else {
+                // send a system notification
                 var notification = new GLib.Notification (full_path) ;
                 var icon = new GLib.ThemedIcon ("dialog-warning") ;
                 notification.set_body ("This isn't a git directory!") ;
@@ -76,13 +88,16 @@ public class giti.HeaderBar : Gtk.HeaderBar {
 
     public void update_liststore() {
         for( int i = 0 ; i < m_dirs.length ; i++ ){
+            string relative_path = get_relative_path (m_dirs[i]) ;
             Gtk.TreeIter iter ;
             liststore.append (out iter) ;
-            liststore.set (iter, Column.DIRNAME, m_dirs[i]) ;
+            liststore.set (iter, Column.DIRNAME, relative_path) ;
+            // liststore.set (iter, Column.DIRNAME, m_dirs[i]) ;
         }
     }
 
     construct {
+        // fetch settings
         m_dirs = main_window.settings.get_strv ("directories") ;
         set_show_close_button (true) ;
 
@@ -116,9 +131,8 @@ public class giti.HeaderBar : Gtk.HeaderBar {
         stackSwitcher.stack = main_window.stack ;
         set_custom_title (stackSwitcher) ;
 
-
+        // setup libgit
         Ggit.init () ;
-
         m_repo_path = File.new_for_path (m_dirs[combobox.get_active ()]) ;
         try {
             m_repo = Ggit.Repository.open (m_repo_path) ;
@@ -129,7 +143,11 @@ public class giti.HeaderBar : Gtk.HeaderBar {
 
         m_untracked = new giti.GridUntracked (main_window, m_repo) ;
         m_staged = new giti.GridStaged (main_window, m_repo) ;
-
-
     }
 }
+
+// string[] s_last = sub_path[0 : sub_path.length - 1] ;
+// for( int j = 0 ; j < s_last.length ; j++ ){
+// print (s_last[j] + "\n") ;
+// }
+// print (s_last + "\n") ;

@@ -28,8 +28,7 @@ in
       pkgs-2020-03-23.fontconfig
 
       pkgs-2020-03-23.gtk3
-      pkgs-2020-03-23.pcre
-      pkgs-2020-03-23.harfbuzz
+      pkgs-2020-03-23.pcre pkgs-2020-03-23.harfbuzz
       pkgs-2020-03-23.xorg.libpthreadstubs
       pkgs-2020-03-23.xorg.libXdmcp
       pkgs-2020-03-23.utillinux
@@ -44,6 +43,7 @@ in
       pkgs-2020-03-23.libcanberra-gtk3
       pkgs-2020-03-23.libgit2-glib
       pkgs-2020-03-23.libgee
+      pkgs-2020-03-23.pantheon.granite
     ];
 
     FONTCONFIG_FILE = "${pkgs-2020-03-23.fontconfig.out}/etc/fonts/fonts.conf";

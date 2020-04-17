@@ -1,13 +1,13 @@
 namespace giti{
     public class Window : Gtk.ApplicationWindow {
-// public File m_repo_path { get ; set ; }
-// public Ggit.Repository m_repo { get ; set ; }
-// public giti.GridStaged m_staged { get ; construct ; }
-// public giti.GridUntracked m_untracked { get ; construct ; }
 
         public GLib.Settings settings ;
         public Gtk.Stack stack { get ; set ; }
         public Gtk.Application m_app { get ; construct ; }
+
+        public giti.HeaderBar main_header_bar { get ; set ; }
+        public giti.WelcomeView welcome_view { get ; set ; }
+        public giti.WelcomeHeaderBar welcome_header_bar { get ; set ; }
 
         public Window (Application app) {
             Object (
@@ -16,12 +16,7 @@ namespace giti{
         }
 
         construct {
-            window_position = Gtk.WindowPosition.CENTER ;
-            set_default_size (350, 80) ;
-
-            settings = new GLib.Settings ("com.github.linarcx.giti") ;
-            move (settings.get_int ("pos-x"), settings.get_int ("pos-y")) ;
-            resize (settings.get_int ("window-width"), settings.get_int ("window-height")) ;
+            set_settings () ;
 
             delete_event.connect (e => {
                 return before_destroy () ;
@@ -30,25 +25,17 @@ namespace giti{
             stack = new Gtk.Stack () ;
             stack.expand = true ;
 
-            // Ggit.init () ;
-
-            // m_repo_path = File.new_for_path ("/mnt/D/workspace/other/lem") ;
-            // try {
-            // m_repo = Ggit.Repository.open (m_repo_path) ;
-            //// print (m_repo_path.get_basename () + "\n") ;
-            // } catch ( GLib.Error e ) {
-            // critical ("Error git-repo open: %s", e.message) ;
-            // }
-
-            // m_untracked = new giti.GridUntracked (this, m_repo) ;
-            // m_staged = new giti.GridStaged (this, m_repo) ;
-
-            add (stack) ;
-
-            var headerBar = new giti.HeaderBar (this) ;
-            set_titlebar (headerBar) ;
-
+            setup_screens () ;
             show_all () ;
+        }
+
+        private void set_settings() {
+            set_default_size (350, 80) ;
+            window_position = Gtk.WindowPosition.CENTER ;
+
+            settings = new GLib.Settings ("com.github.linarcx.giti") ;
+            move (settings.get_int ("pos-x"), settings.get_int ("pos-y")) ;
+            resize (settings.get_int ("window-width"), settings.get_int ("window-height")) ;
         }
 
         public bool before_destroy() {
@@ -62,7 +49,19 @@ namespace giti{
             return false ;
         }
 
+        private void setup_screens() {
+            string[] m_dirs = settings.get_strv ("directories") ;
+            if( m_dirs.length == 0 ){
+                welcome_view = new giti.WelcomeView (this) ;
+                welcome_header_bar = new giti.WelcomeHeaderBar () ;
+                set_titlebar (welcome_header_bar) ;
+                add (welcome_view) ;
+            } else {
+                main_header_bar = new giti.HeaderBar (this) ;
+                add (stack) ;
+                set_titlebar (main_header_bar) ;
+            }
+        }
+
     }
 }
-// public string[] m_dirs = {} ;
-// public Gee.ArrayList<string> m_dirs = new Gee.ArrayList<string> () ;

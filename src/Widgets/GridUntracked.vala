@@ -57,7 +57,7 @@ public class giti.GridUntracked : Gtk.Grid {
     private int check_each_git_status(string path, Ggit.StatusFlags status) {
         if( status == Ggit.StatusFlags.WORKING_TREE_NEW ){
             list_untracked.add (path) ;
-            print (path + ": " + status.to_string () + "\n") ;
+            // print (path + ": " + status.to_string () + "\n") ;
         }
         return 0 ;
     }
@@ -111,7 +111,6 @@ public class giti.GridUntracked : Gtk.Grid {
         grid.attach (actionbar_footer, 0, 1, 1, 50) ;
 
         main_window.stack.add_titled (grid, "untracked", "Untracked") ;
-
         re_create () ;
     }
 }
