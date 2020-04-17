@@ -1,5 +1,5 @@
 <h4 align="center">
-    <img src="assets/mascot.svg" align="center" width="100"/>
+    <img src="data/assets/mascot.svg" align="center" width="100"/>
 </h4>
 
 <h4 align="center">
@@ -7,7 +7,7 @@
 </h4>
 
 <h1 align="center">
-    <img src="assets/shot.png" align="center" width="800"/>
+    <img src="data/assets/shot.png" align="center" width="800"/>
 </h1>
 
 ## A long time ago..

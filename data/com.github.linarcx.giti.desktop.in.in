@@ -1,0 +1,12 @@
+[Desktop Entry]
+Name=Giti
+GenericName=Giti App
+Comment=Permanent observer of your git directories
+Categories=Utility;Development;
+TryExec=@binary@
+Exec=@binary@ %U
+Icon=@icon@
+Terminal=false
+Type=Application
+Keywords=Git;Directory;Permanent;
+StartupWMClass=Giti
