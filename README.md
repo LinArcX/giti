@@ -11,13 +11,11 @@
 </h1>
 
 ## A long time ago..
-I had many projects on my computer some of which were managed by git. After a couple of months, I accidentally lost all of my data and projects.
-And this gave me a good motivation to start a project that monitors my projects and reports me the changes periodically.
+I had many projects on my machine. Some of them were managed by git. After a couple of months, I accidentally lost all of my data.
+And this tragic event led me in a new direction and gave me a good motivation to start giti.
 
 ## Features
-Watches __.git__ directories on your computer and periodically reports the latest changes popping up a window titled: __status_window__.
-
-You can adjust the interval as most convenient for you.
+Giti will monitor your __.git__ directories on your computer and periodically reports the latest changes.
 
 ## Installation
 ### Void [WIP]
@@ -26,16 +24,16 @@ You can adjust the interval as most convenient for you.
 
 ## Install it from source
 You can install giti by compiling from source, here's the list of dependencies required:
+
+### hostmake dependencies:
+ - `ninja`
+ - `meson`
+ - `vala`
+
+### buildtime dependencies:
  - `gtk+-3.0`
  - `libgit2-glib-1.0`
  - `gee-0.8`
- - `glib-2.0`
- - `gobject-2.0`
-
-runtime dependencies:
- - `ninja`
- - `meson`
- - `valac`
 
 ## Building
 ```
