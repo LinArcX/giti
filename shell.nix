@@ -44,6 +44,7 @@ in
       pkgs-2020-03-23.libgit2-glib
       pkgs-2020-03-23.libgee
       pkgs-2020-03-23.pantheon.granite
+      pkgs-2020-03-23.gettext
     ];
 
     FONTCONFIG_FILE = "${pkgs-2020-03-23.fontconfig.out}/etc/fonts/fonts.conf";

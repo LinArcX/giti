@@ -22,8 +22,9 @@ public class giti.HeaderBar : Gtk.HeaderBar {
         string[] sub_path = ugly.split ("/") ;
         int size_sub_path = sub_path.length ;
         string project_name = sub_path[size_sub_path - 1] ;
-        string parent_directory = sub_path[size_sub_path - 2] ;
-        string relative_path = parent_directory + "/" + project_name ;
+        // string parent_directory = sub_path[size_sub_path - 2] ;
+        // string relative_path = parent_directory + "/" + project_name ;
+        string relative_path = project_name ;
         return relative_path ;
     }
 
@@ -96,6 +97,13 @@ public class giti.HeaderBar : Gtk.HeaderBar {
         }
     }
 
+    private Gtk.ModelButton new_menuitem(string label, string accels) {
+        var button = new Gtk.ModelButton () ;
+        button.get_child ().destroy () ;
+        button.add (new Granite.AccelLabel (label, accels)) ;
+        return button ;
+    }
+
     construct {
         // fetch settings
         m_dirs = main_window.settings.get_strv ("directories") ;
@@ -122,10 +130,43 @@ public class giti.HeaderBar : Gtk.HeaderBar {
         combobox.valign = Gtk.Align.CENTER ;
         pack_start (combobox) ;
 
-        var menu_button = new Gtk.Button.from_icon_name ("open-menu",
-                                                         Gtk.IconSize.LARGE_TOOLBAR) ;
-        menu_button.valign = Gtk.Align.CENTER ;
-        pack_end (menu_button) ;
+
+        var new_window_item = new_menuitem ("New Window", "<Control>n") ;
+        // new_window_item.action_name = Sequeler.Services.ActionManager.ACTION_PREFIX + Sequeler.Services.ActionManager.ACTION_NEW_WINDOW ;
+
+        var menu_grid = new Gtk.Grid () ;
+        menu_grid.expand = true ;
+        menu_grid.margin_top = menu_grid.margin_bottom = 6 ;
+        menu_grid.orientation = Gtk.Orientation.VERTICAL ;
+
+        menu_grid.attach (new_window_item, 0, 1, 1, 1) ;
+        // menu_grid.attach (new_connection_item, 0, 2, 1, 1) ;
+        // menu_grid.attach (menu_separator, 0, 3, 1, 1) ;
+        // menu_grid.attach (quit_item, 0, 4, 1, 1) ;
+        menu_grid.show_all () ;
+
+
+        var open_menu = new Gtk.MenuButton () ;
+        open_menu.set_image (new Gtk.Image.from_icon_name ("open-menu", Gtk.IconSize.LARGE_TOOLBAR)) ;
+        open_menu.tooltip_text = "Menu" ;
+
+        // var menu_button = new Gtk.Button.from_icon_name ("open-menu",
+        // Gtk.IconSize.LARGE_TOOLBAR) ;
+        Gtk.Popover menu_popover = new Gtk.Popover (open_menu) ;
+        menu_popover.add (menu_grid) ;
+
+        open_menu.popover = menu_popover ;
+        open_menu.valign = Gtk.Align.CENTER ;
+
+        pack_end (open_menu) ;
+
+        var gtk_settings = Gtk.Settings.get_default () ;
+        var mode_switch = new Granite.ModeSwitch.from_icon_name ("display-brightness-symbolic", "weather-clear-night-symbolic") ;
+        mode_switch.primary_icon_tooltip_text = "Light background" ;
+        mode_switch.secondary_icon_tooltip_text = "Dark background" ;
+        mode_switch.bind_property ("active", gtk_settings, "gtk_application_prefer_dark_theme") ;
+        mode_switch.valign = Gtk.Align.CENTER ;
+        pack_end (mode_switch) ;
 
         var stackSwitcher = new Gtk.StackSwitcher () ;
         stackSwitcher.stack = main_window.stack ;
@@ -145,9 +186,3 @@ public class giti.HeaderBar : Gtk.HeaderBar {
         m_staged = new giti.GridStaged (main_window, m_repo) ;
     }
 }
-
-// string[] s_last = sub_path[0 : sub_path.length - 1] ;
-// for( int j = 0 ; j < s_last.length ; j++ ){
-// print (s_last[j] + "\n") ;
-// }
-// print (s_last + "\n") ;

@@ -34,6 +34,7 @@ You can install giti by compiling from source, here's the list of dependencies r
  - `gtk+-3.0`
  - `libgit2-glib-1.0`
  - `gee-0.8`
+ - `granite`
 
 ## Building
 ```
