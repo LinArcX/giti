@@ -112,7 +112,21 @@ public class giti.GridUntracked : Gtk.Grid {
         btn_add.set_tooltip_markup ("add") ;
 
         btn_add.clicked.connect (() => {
-            save_stash_changes () ;
+            // Emitted when the button has been activated:
+            // Ggit.Index index = new Ggit.Index () ;
+            // index.add () ;
+            try {
+                Ggit.Signature sig = new Ggit.Signature.now ("linarch", "linarcx@riseup.net") ;
+                m_repo.save_stash (sig, "message", Ggit.StashFlags.DEFAULT) ;
+            } catch ( GLib.Error e ) {
+                critical ("Error git-repo open: %s", e.message) ;
+            }
+
+
+            // for( int i = 0 ; i < list_untracked.size ; i++ ){
+            // print (list_untracked[i] + "\n") ;
+            // }
+
         }) ;
 
         Gtk.ActionBar actionbar_footer = new Gtk.ActionBar () ;
