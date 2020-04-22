@@ -2,6 +2,7 @@ public class giti.GridUntracked : Gtk.Grid {
 
     public giti.Window main_window { get ; construct ; }
     public Ggit.Repository m_repo { get ; construct ; }
+    public Ggit.Repository p_repo { get ; set ; }
     Gee.ArrayList<string> list_untracked = new Gee.ArrayList<string> () ;
 
     Gtk.ListStore listmodel ;
@@ -69,7 +70,7 @@ public class giti.GridUntracked : Gtk.Grid {
 
         File p_repo_path = File.new_for_path (path) ;
         try {
-            Ggit.Repository p_repo = Ggit.Repository.open (p_repo_path) ;
+            p_repo = Ggit.Repository.open (p_repo_path) ;
             // print (p_repo_path.get_basename () + "\n") ;
             p_repo.file_status_foreach (null, check_each_git_status) ;
         } catch ( GLib.Error e ) {
@@ -77,6 +78,18 @@ public class giti.GridUntracked : Gtk.Grid {
         }
 
         re_create () ;
+    }
+
+    private void save_stash_changes() {
+        Ggit.Signature sig = new Ggit.Signature.now ("linarcx", "linarcx@riseup.net") ;
+
+        Gitg.Stage stg = new Gitg.Stage () ;
+        for( int i = 0 ; i < list_untracked.size ; i++ ){
+            print (list_untracked[i]) ;
+            // stg.stage (list_untracked[i]) ;
+        }
+
+        // p_repo.save_stash (sig, "message", Ggit.StashFlags.KEEP_INDEX) ;
     }
 
     construct {
@@ -97,6 +110,10 @@ public class giti.GridUntracked : Gtk.Grid {
         btn_add.set_image (btn_add_img) ;
         btn_add.set_relief (Gtk.ReliefStyle.NONE) ;
         btn_add.set_tooltip_markup ("add") ;
+
+        btn_add.clicked.connect (() => {
+            save_stash_changes () ;
+        }) ;
 
         Gtk.ActionBar actionbar_footer = new Gtk.ActionBar () ;
         actionbar_footer.pack_end (btn_add) ;

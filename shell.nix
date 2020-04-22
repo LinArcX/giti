@@ -42,6 +42,7 @@ in
 
       pkgs-2020-03-23.libcanberra-gtk3
       pkgs-2020-03-23.libgit2-glib
+      pkgs-2020-03-23.libgit2
       pkgs-2020-03-23.libgee
       pkgs-2020-03-23.pantheon.granite
       pkgs-2020-03-23.gettext
