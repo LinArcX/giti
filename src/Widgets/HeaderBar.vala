@@ -7,6 +7,8 @@ public class giti.HeaderBar : Gtk.HeaderBar {
     public giti.GridUntracked m_untracked { get ; set ; }
     public giti.Window main_window { get ; construct ; }
 
+    public string full_path_except_project_name ;
+
     private Gtk.ComboBox combobox { get ; set ; }
 
     enum Column {
@@ -59,7 +61,8 @@ public class giti.HeaderBar : Gtk.HeaderBar {
 
                     Gtk.TreeIter iter ;
                     liststore.append (out iter) ;
-                    liststore.set (iter, Column.DIRNAME, relative_path) ;
+                    // liststore.set (iter, Column.DIRNAME, relative_path) ;
+                    liststore.set (iter, Column.DIRNAME, full_path) ;
                 }
                 main_window.settings.set_strv ("directories", m_dirs) ;
             } else {
@@ -160,11 +163,11 @@ public class giti.HeaderBar : Gtk.HeaderBar {
 
     public void update_liststore() {
         for( int i = 0 ; i < m_dirs.length ; i++ ){
-            string relative_path = get_relative_path (m_dirs[i]) ;
+            // string relative_path = get_relative_path (m_dirs[i]) ;
             Gtk.TreeIter iter ;
             liststore.append (out iter) ;
-            liststore.set (iter, Column.DIRNAME, relative_path) ;
-            // liststore.set (iter, Column.DIRNAME, m_dirs[i]) ;
+            // liststore.set (iter, Column.DIRNAME, relative_path) ;
+            liststore.set (iter, Column.DIRNAME, m_dirs[i]) ;
         }
     }
 

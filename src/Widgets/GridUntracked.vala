@@ -3,6 +3,8 @@ public class giti.GridUntracked : Gtk.Grid {
     public giti.Window main_window { get ; construct ; }
     public Ggit.Repository m_repo { get ; construct ; }
     public Ggit.Repository p_repo { get ; set ; }
+    string _path ;
+
     Gee.ArrayList<string> list_untracked = new Gee.ArrayList<string> () ;
 
     Gtk.ListStore listmodel ;
@@ -22,7 +24,6 @@ public class giti.GridUntracked : Gtk.Grid {
 
     public void re_create() {
         listmodel.clear () ;
-        view.set_model (listmodel) ;
 
         /* Insert the phonebook into the ListStore */
         Gtk.TreeIter iter ;
@@ -30,6 +31,7 @@ public class giti.GridUntracked : Gtk.Grid {
             listmodel.append (out iter) ;
             listmodel.set (iter, Column.ID, i, Column.FILE, list_untracked[i]) ;
         }
+        view.set_model (listmodel) ;
     }
 
     void setup_treeview() {
@@ -65,6 +67,7 @@ public class giti.GridUntracked : Gtk.Grid {
 
     public void load_page(string path) {
         list_untracked.clear () ;
+        _path = path ;
         // if( list_untracked.size > 0 ){
         // }
 
@@ -81,15 +84,19 @@ public class giti.GridUntracked : Gtk.Grid {
     }
 
     private void save_stash_changes() {
-        Ggit.Signature sig = new Ggit.Signature.now ("linarcx", "linarcx@riseup.net") ;
-
-        Gitg.Stage stg = new Gitg.Stage () ;
         for( int i = 0 ; i < list_untracked.size ; i++ ){
-            print (list_untracked[i]) ;
-            // stg.stage (list_untracked[i]) ;
-        }
+            try {
+                File file_untracked = File.new_for_path (_path + "/" + list_untracked[i]) ;
 
-        // p_repo.save_stash (sig, "message", Ggit.StashFlags.KEEP_INDEX) ;
+                Ggit.Index index ;
+                index = p_repo.get_index () ;
+                index.add_file (file_untracked) ;
+                index.write () ;
+                re_create () ;
+            } catch ( GLib.Error e ) {
+                critical ("Error git-status: %s", e.message) ;
+            }
+        }
     }
 
     construct {
@@ -111,23 +118,7 @@ public class giti.GridUntracked : Gtk.Grid {
         btn_add.set_relief (Gtk.ReliefStyle.NONE) ;
         btn_add.set_tooltip_markup ("add") ;
 
-        btn_add.clicked.connect (() => {
-            // Emitted when the button has been activated:
-            // Ggit.Index index = new Ggit.Index () ;
-            // index.add () ;
-            try {
-                Ggit.Signature sig = new Ggit.Signature.now ("linarch", "linarcx@riseup.net") ;
-                m_repo.save_stash (sig, "message", Ggit.StashFlags.DEFAULT) ;
-            } catch ( GLib.Error e ) {
-                critical ("Error git-repo open: %s", e.message) ;
-            }
-
-
-            // for( int i = 0 ; i < list_untracked.size ; i++ ){
-            // print (list_untracked[i] + "\n") ;
-            // }
-
-        }) ;
+        btn_add.clicked.connect (save_stash_changes) ;
 
         Gtk.ActionBar actionbar_footer = new Gtk.ActionBar () ;
         actionbar_footer.pack_end (btn_add) ;
@@ -145,3 +136,27 @@ public class giti.GridUntracked : Gtk.Grid {
         re_create () ;
     }
 }
+
+// Emitted when the button has been activated:
+// Ggit.Index index = new Ggit.Index () ;
+// index.add () ;
+// try {
+// Ggit.Signature sig = new Ggit.Signature.now ("linarch", "linarcx@riseup.net") ;
+// m_repo.save_stash (sig, "message", Ggit.StashFlags.DEFAULT) ;
+// } catch ( GLib.Error e ) {
+// critical ("Error git-repo open: %s", e.message) ;
+// }
+// for( int i = 0 ; i < list_untracked.size ; i++ ){
+// print (list_untracked[i] + "\n") ;
+// }
+
+
+
+// Ggit.Signature sig = new Ggit.Signature.now ("linarcx", "linarcx@riseup.net") ;
+// Gitg.Stage.stage() stg = new Gitg.Stage () ;
+
+// Gitg.Stage stg ; // = new Gitg.Stage () ;
+// stg = this ;
+// stg.stage (file_untracked) ;
+// stg.stage (list_untracked[i]) ;
+// p_repo.save_stash (sig, "message", Ggit.StashFlags.KEEP_INDEX) ;
