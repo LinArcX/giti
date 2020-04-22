@@ -3,9 +3,11 @@ public class giti.HeaderBar : Gtk.HeaderBar {
     string[] m_dirs = {} ;
     public File m_repo_path { get ; set ; }
     public Ggit.Repository m_repo { get ; set ; }
+    public giti.GridStaged m_staged { get ; set ; }
+    public giti.GridUntracked m_untracked { get ; set ; }
     public giti.Window main_window { get ; construct ; }
-    public giti.GridStaged m_staged { get ; construct ; }
-    public giti.GridUntracked m_untracked { get ; construct ; }
+
+    private Gtk.ComboBox combobox { get ; set ; }
 
     enum Column {
         DIRNAME
@@ -31,6 +33,7 @@ public class giti.HeaderBar : Gtk.HeaderBar {
     void item_changed(Gtk.ComboBox combo) {
         // print ("You chose " + m_dirs[combo.get_active ()] + "\n") ;
         m_untracked.load_page (m_dirs[combo.get_active ()]) ;
+        m_staged.load_page (m_dirs[combo.get_active ()]) ;
     }
 
     private void dir_selected(Gtk.NativeDialog dialog, int response_id) {
@@ -87,6 +90,74 @@ public class giti.HeaderBar : Gtk.HeaderBar {
         open_dialog.run () ;
     }
 
+    private Gtk.ModelButton new_menuitem(string label, string accels) {
+        var button = new Gtk.ModelButton () ;
+        button.get_child ().destroy () ;
+        button.add (new Granite.AccelLabel (label, accels)) ;
+        return button ;
+    }
+
+    private void setup_granite_switch() {
+        var gtk_settings = Gtk.Settings.get_default () ;
+        var mode_switch = new Granite.ModeSwitch.from_icon_name ("display-brightness-symbolic", "weather-clear-night-symbolic") ;
+        mode_switch.primary_icon_tooltip_text = "Light background" ;
+        mode_switch.secondary_icon_tooltip_text = "Dark background" ;
+        mode_switch.bind_property ("active", gtk_settings, "gtk_application_prefer_dark_theme") ;
+        mode_switch.valign = Gtk.Align.CENTER ;
+        pack_end (mode_switch) ;
+    }
+
+    private void setup_menu_items() {
+        var new_window_item = new_menuitem ("New Window", "<Control>n") ;
+        // new_window_item.action_name = Sequeler.Services.ActionManager.ACTION_PREFIX + Sequeler.Services.ActionManager.ACTION_NEW_WINDOW ;
+
+        var menu_grid = new Gtk.Grid () ;
+        menu_grid.expand = true ;
+        menu_grid.margin_top = menu_grid.margin_bottom = 6 ;
+        menu_grid.orientation = Gtk.Orientation.VERTICAL ;
+
+        menu_grid.attach (new_window_item, 0, 1, 1, 1) ;
+        // menu_grid.attach (new_connection_item, 0, 2, 1, 1) ;
+        // menu_grid.attach (menu_separator, 0, 3, 1, 1) ;
+        // menu_grid.attach (quit_item, 0, 4, 1, 1) ;
+        menu_grid.show_all () ;
+
+        var open_menu = new Gtk.MenuButton () ;
+        open_menu.set_image (new Gtk.Image.from_icon_name ("open-menu", Gtk.IconSize.LARGE_TOOLBAR)) ;
+        open_menu.tooltip_text = "Menu" ;
+
+        // var menu_button = new Gtk.Button.from_icon_name ("open-menu",
+        // Gtk.IconSize.LARGE_TOOLBAR) ;
+        Gtk.Popover menu_popover = new Gtk.Popover (open_menu) ;
+        menu_popover.add (menu_grid) ;
+
+        open_menu.popover = menu_popover ;
+        open_menu.valign = Gtk.Align.CENTER ;
+        pack_end (open_menu) ;
+    }
+
+    private void setup_stack_switcher() {
+        var stackSwitcher = new Gtk.StackSwitcher () ;
+        stackSwitcher.stack = main_window.stack ;
+        set_custom_title (stackSwitcher) ;
+    }
+
+    private void setup_grid_items() {
+        m_untracked = new giti.GridUntracked (main_window, m_repo) ;
+        m_staged = new giti.GridStaged (main_window, m_repo) ;
+    }
+
+    private void setup_libgit() {
+        Ggit.init () ;
+        m_repo_path = File.new_for_path (m_dirs[combobox.get_active ()]) ;
+        try {
+            m_repo = Ggit.Repository.open (m_repo_path) ;
+            // print (m_repo_path.get_basename () + "\n") ;
+        } catch ( GLib.Error e ) {
+            critical ("Error git-repo open: %s", e.message) ;
+        }
+    }
+
     public void update_liststore() {
         for( int i = 0 ; i < m_dirs.length ; i++ ){
             string relative_path = get_relative_path (m_dirs[i]) ;
@@ -97,11 +168,17 @@ public class giti.HeaderBar : Gtk.HeaderBar {
         }
     }
 
-    private Gtk.ModelButton new_menuitem(string label, string accels) {
-        var button = new Gtk.ModelButton () ;
-        button.get_child ().destroy () ;
-        button.add (new Granite.AccelLabel (label, accels)) ;
-        return button ;
+    private void setup_project_combo_box() {
+        liststore = new Gtk.ListStore (1, typeof (string)) ;
+        update_liststore () ;
+        combobox = new Gtk.ComboBox.with_model (liststore) ;
+        Gtk.CellRendererText cell = new Gtk.CellRendererText () ;
+        combobox.pack_start (cell, false) ;
+        combobox.set_attributes (cell, "text", Column.DIRNAME) ;
+        combobox.set_active (0) ;
+        combobox.changed.connect (this.item_changed) ;
+        combobox.valign = Gtk.Align.CENTER ;
+        pack_start (combobox) ;
     }
 
     construct {
@@ -119,70 +196,11 @@ public class giti.HeaderBar : Gtk.HeaderBar {
         add_button.clicked.connect (add_activated) ;
         pack_start (add_button) ;
 
-        liststore = new Gtk.ListStore (1, typeof (string)) ;
-        update_liststore () ;
-        Gtk.ComboBox combobox = new Gtk.ComboBox.with_model (liststore) ;
-        Gtk.CellRendererText cell = new Gtk.CellRendererText () ;
-        combobox.pack_start (cell, false) ;
-        combobox.set_attributes (cell, "text", Column.DIRNAME) ;
-        combobox.set_active (0) ;
-        combobox.changed.connect (this.item_changed) ;
-        combobox.valign = Gtk.Align.CENTER ;
-        pack_start (combobox) ;
-
-
-        var new_window_item = new_menuitem ("New Window", "<Control>n") ;
-        // new_window_item.action_name = Sequeler.Services.ActionManager.ACTION_PREFIX + Sequeler.Services.ActionManager.ACTION_NEW_WINDOW ;
-
-        var menu_grid = new Gtk.Grid () ;
-        menu_grid.expand = true ;
-        menu_grid.margin_top = menu_grid.margin_bottom = 6 ;
-        menu_grid.orientation = Gtk.Orientation.VERTICAL ;
-
-        menu_grid.attach (new_window_item, 0, 1, 1, 1) ;
-        // menu_grid.attach (new_connection_item, 0, 2, 1, 1) ;
-        // menu_grid.attach (menu_separator, 0, 3, 1, 1) ;
-        // menu_grid.attach (quit_item, 0, 4, 1, 1) ;
-        menu_grid.show_all () ;
-
-
-        var open_menu = new Gtk.MenuButton () ;
-        open_menu.set_image (new Gtk.Image.from_icon_name ("open-menu", Gtk.IconSize.LARGE_TOOLBAR)) ;
-        open_menu.tooltip_text = "Menu" ;
-
-        // var menu_button = new Gtk.Button.from_icon_name ("open-menu",
-        // Gtk.IconSize.LARGE_TOOLBAR) ;
-        Gtk.Popover menu_popover = new Gtk.Popover (open_menu) ;
-        menu_popover.add (menu_grid) ;
-
-        open_menu.popover = menu_popover ;
-        open_menu.valign = Gtk.Align.CENTER ;
-
-        pack_end (open_menu) ;
-
-        var gtk_settings = Gtk.Settings.get_default () ;
-        var mode_switch = new Granite.ModeSwitch.from_icon_name ("display-brightness-symbolic", "weather-clear-night-symbolic") ;
-        mode_switch.primary_icon_tooltip_text = "Light background" ;
-        mode_switch.secondary_icon_tooltip_text = "Dark background" ;
-        mode_switch.bind_property ("active", gtk_settings, "gtk_application_prefer_dark_theme") ;
-        mode_switch.valign = Gtk.Align.CENTER ;
-        pack_end (mode_switch) ;
-
-        var stackSwitcher = new Gtk.StackSwitcher () ;
-        stackSwitcher.stack = main_window.stack ;
-        set_custom_title (stackSwitcher) ;
-
-        // setup libgit
-        Ggit.init () ;
-        m_repo_path = File.new_for_path (m_dirs[combobox.get_active ()]) ;
-        try {
-            m_repo = Ggit.Repository.open (m_repo_path) ;
-            // print (m_repo_path.get_basename () + "\n") ;
-        } catch ( GLib.Error e ) {
-            critical ("Error git-repo open: %s", e.message) ;
-        }
-
-        m_untracked = new giti.GridUntracked (main_window, m_repo) ;
-        m_staged = new giti.GridStaged (main_window, m_repo) ;
+        setup_project_combo_box () ;
+        setup_menu_items () ;
+        setup_granite_switch () ;
+        setup_stack_switcher () ;
+        setup_libgit () ;
+        setup_grid_items () ;
     }
 }

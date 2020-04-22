@@ -4,6 +4,9 @@ public class giti.GridStaged : Gtk.Grid {
     public Ggit.Repository m_repo { get ; construct ; }
     Gee.ArrayList<string> list_staged = new Gee.ArrayList<string> () ;
 
+    Gtk.ListStore listmodel ;
+    Gtk.TreeView view ;
+
     enum Column {
         ID,
         FILE
@@ -16,10 +19,22 @@ public class giti.GridStaged : Gtk.Grid {
             ) ;
     }
 
-    void setup_treeview(Gtk.TreeView view) {
-        var listmodel = new Gtk.ListStore (2, typeof (int), typeof (string)) ;
+    public void re_create() {
+        listmodel.clear () ;
         view.set_model (listmodel) ;
 
+        /* Insert the phonebook into the ListStore */
+        Gtk.TreeIter iter ;
+        for( int i = 0 ; i < list_staged.size ; i++ ){
+            listmodel.append (out iter) ;
+            listmodel.set (iter, Column.ID, i, Column.FILE, list_staged[i]) ;
+        }
+    }
+
+    void setup_treeview() {
+        re_create () ;
+
+        listmodel = new Gtk.ListStore (2, typeof (int), typeof (string)) ;
         /*columns*/
         Gtk.TreeViewColumn col_id = new Gtk.TreeViewColumn.with_attributes ("ID", new Gtk.CellRendererText (), "text", Column.ID, null) ;
         col_id.set_clickable (true) ;
@@ -37,13 +52,6 @@ public class giti.GridStaged : Gtk.Grid {
         col_file.set_alignment (0.5f) ;
         col_file.set_widget (m_label) ;
         view.insert_column (col_file, -1) ;
-
-        /* Insert the phonebook into the ListStore */
-        Gtk.TreeIter iter ;
-        for( int i = 0 ; i < list_staged.size ; i++ ){
-            listmodel.append (out iter) ;
-            listmodel.set (iter, Column.ID, i, Column.FILE, list_staged[i]) ;
-        }
     }
 
     private int check_each_git_status(string path, Ggit.StatusFlags status) {
@@ -54,6 +62,23 @@ public class giti.GridStaged : Gtk.Grid {
         return 0 ;
     }
 
+    public void load_page(string path) {
+        list_staged.clear () ;
+        // if( list_staged.size > 0 ){
+        // }
+
+        File p_repo_path = File.new_for_path (path) ;
+        try {
+            Ggit.Repository p_repo = Ggit.Repository.open (p_repo_path) ;
+            // print (p_repo_path.get_basename () + "\n") ;
+            p_repo.file_status_foreach (null, check_each_git_status) ;
+        } catch ( GLib.Error e ) {
+            critical ("Error git-repo open: %s", e.message) ;
+        }
+
+        re_create () ;
+    }
+
     construct {
         try {
             m_repo.file_status_foreach (null, check_each_git_status) ;
@@ -62,14 +87,13 @@ public class giti.GridStaged : Gtk.Grid {
         }
 
         var grid = new Gtk.Grid () ;
-        var view = new Gtk.TreeView () ;
+        view = new Gtk.TreeView () ;
 
-        this.setup_treeview (view) ;
+        this.setup_treeview () ;
         view.expand = true ;
 
-        // public const string TOOLTIP_TEXT_FOR_SELECT_BOOK = "Select one or more books in library" ;
         Gtk.Button btn_add = new Gtk.Button () ;
-        Gtk.Image btn_add_img = new Gtk.Image.from_icon_name ("document-send", Gtk.IconSize.MENU) ;
+        Gtk.Image btn_add_img = new Gtk.Image.from_icon_name ("document-export", Gtk.IconSize.MENU) ;
         btn_add.set_image (btn_add_img) ;
         btn_add.set_relief (Gtk.ReliefStyle.NONE) ;
         btn_add.set_tooltip_markup ("add") ;
@@ -87,10 +111,6 @@ public class giti.GridStaged : Gtk.Grid {
         grid.attach (actionbar_footer, 0, 1, 1, 50) ;
 
         main_window.stack.add_titled (grid, "staged", "Staged") ;
-
+        re_create () ;
     }
 }
-
-// var staged = new Gtk.Grid () ;
-// staged.add (new Gtk.Label ("Staged page!")) ;
-// main_window.stack.add_titled (staged, "staged", "Staged") ;
