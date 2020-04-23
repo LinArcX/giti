@@ -92,14 +92,14 @@ public class giti.GridStaged : Gtk.Grid {
         this.setup_treeview () ;
         view.expand = true ;
 
-        Gtk.Button btn_add = new Gtk.Button () ;
-        Gtk.Image btn_add_img = new Gtk.Image.from_icon_name ("document-export", Gtk.IconSize.MENU) ;
-        btn_add.set_image (btn_add_img) ;
-        btn_add.set_relief (Gtk.ReliefStyle.NONE) ;
-        btn_add.set_tooltip_markup ("add") ;
+        Gtk.Button btn_commit = new Gtk.Button () ;
+        Gtk.Image btn_commit_img = new Gtk.Image.from_icon_name ("document-send", Gtk.IconSize.MENU) ;
+        btn_commit.set_image (btn_commit_img) ;
+        btn_commit.set_relief (Gtk.ReliefStyle.NONE) ;
+        btn_commit.set_tooltip_markup ("add") ;
 
         Gtk.ActionBar actionbar_footer = new Gtk.ActionBar () ;
-        actionbar_footer.pack_end (btn_add) ;
+        actionbar_footer.pack_end (btn_commit) ;
         actionbar_footer.height_request = 25 ;
 
         var scrolled_window = new Gtk.ScrolledWindow (null, null) ;
@@ -111,6 +111,13 @@ public class giti.GridStaged : Gtk.Grid {
         grid.attach (actionbar_footer, 0, 1, 1, 50) ;
 
         main_window.stack.add_titled (grid, "staged", "Staged") ;
+        main_window.stack.set_focus_child.connect ((e) => {
+            print (main_window.stack.get_visible_child_name () + "\n") ;
+            list_staged.clear () ;
+            re_create () ;
+        }) ;
+
+
         re_create () ;
     }
 }

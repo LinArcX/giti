@@ -23,6 +23,7 @@ public class giti.GridUntracked : Gtk.Grid {
     }
 
     public void re_create() {
+
         listmodel.clear () ;
 
         /* Insert the phonebook into the ListStore */
@@ -84,14 +85,17 @@ public class giti.GridUntracked : Gtk.Grid {
     }
 
     private void save_stash_changes() {
+        Ggit.Index index ;
+        index = p_repo.get_index () ;
+
         for( int i = 0 ; i < list_untracked.size ; i++ ){
             try {
                 File file_untracked = File.new_for_path (_path + "/" + list_untracked[i]) ;
 
-                Ggit.Index index ;
-                index = p_repo.get_index () ;
                 index.add_file (file_untracked) ;
                 index.write () ;
+
+                list_untracked.clear () ;
                 re_create () ;
             } catch ( GLib.Error e ) {
                 critical ("Error git-status: %s", e.message) ;
@@ -122,7 +126,7 @@ public class giti.GridUntracked : Gtk.Grid {
 
         Gtk.ActionBar actionbar_footer = new Gtk.ActionBar () ;
         actionbar_footer.pack_end (btn_add) ;
-        actionbar_footer.height_request = 25 ;
+        actionbar_footer.height_request = 30 ;
 
         var scrolled_window = new Gtk.ScrolledWindow (null, null) ;
         scrolled_window.set_border_width (10) ;
@@ -133,6 +137,9 @@ public class giti.GridUntracked : Gtk.Grid {
         grid.attach (actionbar_footer, 0, 1, 1, 50) ;
 
         main_window.stack.add_titled (grid, "untracked", "Untracked") ;
+        main_window.stack.set_focus_child.connect ((e) => {
+            // print (main_window.stack.get_visible_child_name ()) ;
+        }) ;
         re_create () ;
     }
 }
@@ -160,3 +167,28 @@ public class giti.GridUntracked : Gtk.Grid {
 // stg.stage (file_untracked) ;
 // stg.stage (list_untracked[i]) ;
 // p_repo.save_stash (sig, "message", Ggit.StashFlags.KEEP_INDEX) ;
+
+
+// Gtk.Widget wid = main_window.stack.get_child_by_name ("untracked") ;
+// Gtk.Widget wid = main_window.stack.get_visible_child () ;
+// e.visible = false ;
+// print (e.name + "\n") ;
+// print (e.get_tooltip_text () + "\n") ;
+// print (e.get_tooltip_markup () + "\n") ;
+
+// main_window.stack.screen_changed.connect (() => {
+// print ("hi" + "\n") ;
+// }) ;
+
+
+// unowned ParamSpec ? spec = main_window.stack.find_property ("visible_child") ;
+
+// main_window.stack.notify.connect ((spec) => {
+// print ("hi" + "\n") ;
+// print (spec.get_nick ()) ;
+// }) ;
+
+
+// btn_add.clicked.connect (() => {
+// print ("In..") ;
+// }) ;

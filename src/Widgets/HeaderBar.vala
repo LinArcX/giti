@@ -1,20 +1,19 @@
 public class giti.HeaderBar : Gtk.HeaderBar {
 
-    string[] m_dirs = {} ;
-    public File m_repo_path { get ; set ; }
-    public Ggit.Repository m_repo { get ; set ; }
-    public giti.GridStaged m_staged { get ; set ; }
-    public giti.GridUntracked m_untracked { get ; set ; }
-    public giti.Window main_window { get ; construct ; }
-
-    public string full_path_except_project_name ;
-
-    private Gtk.ComboBox combobox { get ; set ; }
-
     enum Column {
         DIRNAME
     }
+
+    string[] m_dirs = {} ;
     public Gtk.ListStore liststore ;
+    public string full_path_except_project_name ;
+
+    public File m_repo_path { get ; set ; }
+    public Ggit.Repository m_repo { get ; set ; }
+    private Gtk.ComboBox combobox { get ; set ; }
+    public giti.GridStaged m_staged { get ; set ; }
+    public giti.GridUntracked m_untracked { get ; set ; }
+    public giti.Window main_window { get ; construct ; }
 
     public HeaderBar (giti.Window window) {
         Object (
@@ -141,6 +140,11 @@ public class giti.HeaderBar : Gtk.HeaderBar {
 
     private void setup_stack_switcher() {
         var stackSwitcher = new Gtk.StackSwitcher () ;
+
+        // stackSwitcher.stack.set_focus_child.connect (() => {
+        // print ("hi" + "\n") ;
+        // }) ;
+
         stackSwitcher.stack = main_window.stack ;
         set_custom_title (stackSwitcher) ;
     }
@@ -155,7 +159,6 @@ public class giti.HeaderBar : Gtk.HeaderBar {
         m_repo_path = File.new_for_path (m_dirs[combobox.get_active ()]) ;
         try {
             m_repo = Ggit.Repository.open (m_repo_path) ;
-            // print (m_repo_path.get_basename () + "\n") ;
         } catch ( GLib.Error e ) {
             critical ("Error git-repo open: %s", e.message) ;
         }
@@ -184,11 +187,7 @@ public class giti.HeaderBar : Gtk.HeaderBar {
         pack_start (combobox) ;
     }
 
-    construct {
-        // fetch settings
-        m_dirs = main_window.settings.get_strv ("directories") ;
-        set_show_close_button (true) ;
-
+    private void setup_btn_add_new_folder() {
         Gtk.Button add_button = new Gtk.Button () ;
         Gtk.Image add_button_img = new Gtk.Image.from_icon_name ("folder-new", Gtk.IconSize.LARGE_TOOLBAR) ;
         // add_button.get_style_context ().add_class ("suggested-action") ;
@@ -198,7 +197,14 @@ public class giti.HeaderBar : Gtk.HeaderBar {
         add_button.set_tooltip_markup ("Add new .git directory") ;
         add_button.clicked.connect (add_activated) ;
         pack_start (add_button) ;
+    }
 
+    construct {
+        // fetch settings
+        m_dirs = main_window.settings.get_strv ("directories") ;
+        set_show_close_button (true) ;
+
+        setup_btn_add_new_folder () ;
         setup_project_combo_box () ;
         setup_menu_items () ;
         setup_granite_switch () ;
