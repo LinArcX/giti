@@ -1,4 +1,4 @@
-public class giti.HeaderBar : Gtk.HeaderBar {
+public class GITI.HeaderBar : Gtk.HeaderBar {
 
     enum Column {
         DIRNAME
@@ -11,11 +11,11 @@ public class giti.HeaderBar : Gtk.HeaderBar {
     public File m_repo_path { get ; set ; }
     public Ggit.Repository m_repo { get ; set ; }
     private Gtk.ComboBox combobox { get ; set ; }
-    public giti.GridStaged m_staged { get ; set ; }
-    public giti.GridUntracked m_untracked { get ; set ; }
-    public giti.Window main_window { get ; construct ; }
+    public GITI.GridStaged m_staged { get ; set ; }
+    public GITI.GridUntracked m_untracked { get ; set ; }
+    public GITI.Window main_window { get ; construct ; }
 
-    public HeaderBar (giti.Window window) {
+    public HeaderBar (GITI.Window window) {
         Object (
             main_window: window
             ) ;
@@ -63,14 +63,12 @@ public class giti.HeaderBar : Gtk.HeaderBar {
                     // liststore.set (iter, Column.DIRNAME, relative_path) ;
                     liststore.set (iter, Column.DIRNAME, full_path) ;
                 }
-                main_window.settings.set_strv ("directories", m_dirs) ;
+                main_window._settings.set_strv ("directories", m_dirs) ;
             } else {
-                // send a system notification
-                var notification = new GLib.Notification (full_path) ;
-                var icon = new GLib.ThemedIcon ("dialog-warning") ;
-                notification.set_body ("This isn't a git directory!") ;
-                notification.set_icon (icon) ;
-                main_window.m_app.send_notification ("com.github.linarcx.giti", notification) ;
+                GITI.Util.show_notification (main_window.app, full_path,
+                                             "com.github.linarcx.giti",
+                                             "This isn't a git directory!",
+                                             "dialog-warning") ;
             }
             break ;
         case Gtk.ResponseType.CANCEL:
@@ -145,13 +143,13 @@ public class giti.HeaderBar : Gtk.HeaderBar {
         // print ("hi" + "\n") ;
         // }) ;
 
-        stackSwitcher.stack = main_window.stack ;
+        stackSwitcher.stack = main_window._stack ;
         set_custom_title (stackSwitcher) ;
     }
 
     private void setup_grid_items() {
-        m_untracked = new giti.GridUntracked (main_window, m_repo) ;
-        m_staged = new giti.GridStaged (main_window, m_repo) ;
+        m_untracked = new GITI.GridUntracked (main_window, m_repo) ;
+        m_staged = new GITI.GridStaged (main_window, m_repo) ;
     }
 
     private void setup_libgit() {
@@ -201,7 +199,7 @@ public class giti.HeaderBar : Gtk.HeaderBar {
 
     construct {
         // fetch settings
-        m_dirs = main_window.settings.get_strv ("directories") ;
+        m_dirs = main_window._settings.get_strv ("directories") ;
         set_show_close_button (true) ;
 
         setup_btn_add_new_folder () ;

@@ -1,6 +1,6 @@
-public class giti.GridUntracked : Gtk.Grid {
+public class GITI.GridUntracked : Gtk.Grid {
 
-    public giti.Window main_window { get ; construct ; }
+    public GITI.Window main_window { get ; construct ; }
     public Ggit.Repository m_repo { get ; construct ; }
     public Ggit.Repository p_repo { get ; set ; }
     string _path ;
@@ -15,7 +15,7 @@ public class giti.GridUntracked : Gtk.Grid {
         FILE
     }
 
-    public GridUntracked (giti.Window window, Ggit.Repository repo) {
+    public GridUntracked (GITI.Window window, Ggit.Repository repo) {
         GLib.Object (
             main_window: window,
             m_repo: repo
@@ -136,8 +136,8 @@ public class giti.GridUntracked : Gtk.Grid {
         grid.attach (scrolled_window, 0, 0, 1, 1) ;
         grid.attach (actionbar_footer, 0, 1, 1, 50) ;
 
-        main_window.stack.add_titled (grid, "untracked", "Untracked") ;
-        main_window.stack.set_focus_child.connect ((e) => {
+        main_window._stack.add_titled (grid, "untracked", "Untracked") ;
+        main_window._stack.set_focus_child.connect ((e) => {
             // print (main_window.stack.get_visible_child_name ()) ;
         }) ;
         re_create () ;

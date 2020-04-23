@@ -5,11 +5,12 @@ executable(
     'Application.vala',
 
     'Widgets/Window.vala',
-    'Widgets/Welcome.vala',
+    'Widgets/WelcomePage.vala',
     'Widgets/WelcomeHeaderBar.vala',
     'Widgets/HeaderBar.vala',
     'Widgets/GridUntracked.vala',
     'Widgets/GridStaged.vala',
+    'Util/Util.vala',
 
     dependencies: [
         dependency('gtk+-3.0'),

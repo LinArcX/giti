@@ -1,6 +1,6 @@
-public class giti.GridStaged : Gtk.Grid {
+public class GITI.GridStaged : Gtk.Grid {
 
-    public giti.Window main_window { get ; construct ; }
+    public GITI.Window main_window { get ; construct ; }
     public Ggit.Repository m_repo { get ; construct ; }
     Gee.ArrayList<string> list_staged = new Gee.ArrayList<string> () ;
 
@@ -12,7 +12,7 @@ public class giti.GridStaged : Gtk.Grid {
         FILE
     }
 
-    public GridStaged (giti.Window window, Ggit.Repository repo) {
+    public GridStaged (GITI.Window window, Ggit.Repository repo) {
         GLib.Object (
             main_window: window,
             m_repo: repo
@@ -110,9 +110,9 @@ public class giti.GridStaged : Gtk.Grid {
         grid.attach (scrolled_window, 0, 0, 1, 1) ;
         grid.attach (actionbar_footer, 0, 1, 1, 50) ;
 
-        main_window.stack.add_titled (grid, "staged", "Staged") ;
-        main_window.stack.set_focus_child.connect ((e) => {
-            print (main_window.stack.get_visible_child_name () + "\n") ;
+        main_window._stack.add_titled (grid, "staged", "Staged") ;
+        main_window._stack.set_focus_child.connect ((e) => {
+            print (main_window._stack.get_visible_child_name () + "\n") ;
             list_staged.clear () ;
             re_create () ;
         }) ;
