@@ -59,7 +59,7 @@ public class GITI.GridUntracked : Gtk.Grid {
     }
 
     private int check_each_git_status(string path, Ggit.StatusFlags status) {
-        if( status == Ggit.StatusFlags.WORKING_TREE_NEW ){
+        if( status == Ggit.StatusFlags.WORKING_TREE_NEW || status == Ggit.StatusFlags.WORKING_TREE_MODIFIED ){
             list_untracked.add (path) ;
             // print (path + ": " + status.to_string () + "\n") ;
         }
