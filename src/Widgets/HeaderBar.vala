@@ -216,9 +216,3 @@ public class GITI.HeaderBar : Gtk.HeaderBar {
         setup_grid_items () ;
     }
 }
-
-// foreach( var i in _titles_and_full_paths ){
-// for( int j = 0 ; j < i.size ; j++ ){
-// print (i[j].to_string () + "\n") ;
-// }
-// }
