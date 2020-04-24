@@ -31,26 +31,63 @@ public class GITI.GridStaged : Gtk.Grid {
         return 0 ;
     }
 
-    private void save_stash_changes() {
+    public Ggit.Signature ? get_verified_committer ()
+    {
         try {
-            Ggit.Index index ;
-            index = _new_repo.get_index () ;
+            return new Ggit.Signature.now ("linarcx", "linarcx@riseup.net") ;
+        } catch ( Error e ) {
+            critical ("Error git-repo open: %s", e.message) ;
+            return null ;
+        }
+    }
 
-            for( int i = 0 ; i < _staged_files.size ; i++ ){
-                try {
+    private void commit_changed() {
+        try {
+            Ggit.OId commitoid ;
+            Ggit.Ref ? head = null ;
+            Ggit.Commit ? parent = null ;
+            var sig = get_verified_committer () ;
+            Ggit.Tree tree ;
+
+            try {
+                head = _new_repo.get_head () ;
+                // print ("Head: " + head.get_name ()) ;
+                parent = head.lookup () as Ggit.Commit ;
+                tree = parent.get_tree () ;
+            } catch ( GLib.Error e ) {
+                critical ("Error git (head open): %s", e.message) ;
+                return ;
+            }
+
+            try {
+                Ggit.Commit[] parents ;
+                if( parent != null ){
+                    parents = new Ggit.Commit[] { parent } ;
+                } else {
+                    parents = new Ggit.Commit[] {} ;
+                }
+
+                for( int i = 0 ; i < _staged_files.size ; i++ ){
                     File file_staged = File.new_for_path (_new_full_path + "/" + _staged_files[i]) ;
 
-                    index.add_file (file_staged) ;
-                    index.write () ;
-
-                    _staged_files.clear () ;
-                    update_list_model_tree_view () ;
-                } catch ( GLib.Error e ) {
-                    critical ("Error git (index-write): %s", e.message) ;
+                    // print (_staged_files[i] + "\n") ;
+                    commitoid = _new_repo.create_commit ("HEAD",
+                                                         sig,
+                                                         sig,
+                                                         null,
+                                                         "commit " + _staged_files[i],
+                                                         // "commit " + file_staged.get_basename (),
+                                                         // "commit " + "test2_7",
+                                                         tree,
+                                                         parents) ;
+                    head.set_target (commitoid, "log") ;
                 }
+            } catch ( GLib.Error e ) {
+                critical ("Error git (get-commit): %s", e.message) ;
             }
+
         } catch ( GLib.Error e ) {
-            critical ("Error git (get-index): %s", e.message) ;
+            critical ("Error git (get-commit): %s", e.message) ;
         }
     }
 
@@ -97,8 +134,8 @@ public class GITI.GridStaged : Gtk.Grid {
 
         btn_add.set_image (btn_add_img) ;
         btn_add.set_relief (Gtk.ReliefStyle.NONE) ;
-        btn_add.set_tooltip_markup ("add") ;
-        btn_add.clicked.connect (save_stash_changes) ;
+        btn_add.set_tooltip_markup ("Commit") ;
+        btn_add.clicked.connect (commit_changed) ;
 
         actionbar_footer.height_request = 30 ;
         actionbar_footer.pack_end (btn_add) ;
@@ -154,3 +191,43 @@ public class GITI.GridStaged : Gtk.Grid {
         update_list_model_tree_view () ;
     }
 }
+
+
+// private Ggit.Tree ? _head_tree ;
+// public async Ggit.Tree ? get_head_tree (Ggit.Repository repo) throws Error
+// {
+// if( _head_tree != null ){
+// return _head_tree ;
+// }
+
+// Error ? e = null ;
+
+// yield Async.thread(() => {
+// try {
+// var head = repo.get_head () ;
+// var commit = (Ggit.Commit)head.lookup () ;
+
+// _head_tree = commit.get_tree () ;
+// } catch ( Error err ) {
+// e = err ;
+// }
+// }) ;
+
+// if( e != null ){
+// throw e ;
+// }
+
+// return _head_tree ;
+// }
+///////////////////
+
+// tree = _new_repo.lookup<Ggit.Tree>(GITI.GridUntracked.treeoid) ;
+// tree = _new_repo.lookup_tree ((Ggit.OId)GITI.GridUntracked.treeoid) ;
+// tree = get_head_tree (_new_repo) ;
+// var commit = (Ggit.Commit)head.lookup () ;
+
+
+// try {
+//// head = _new_repo.get_head () ;
+// } catch {
+// }

@@ -4,6 +4,7 @@ public class GITI.GridUntracked : Gtk.Grid {
         ID,
         FILE
     }
+    public Ggit.OId treeoid ;
 
     public GITI.Window main_window { get ; construct ; }
     public Ggit.Repository _new_repo { get ; set ; }
@@ -43,6 +44,7 @@ public class GITI.GridUntracked : Gtk.Grid {
 
                     index.add_file (file_untracked) ;
                     index.write () ;
+                    treeoid = index.write_tree () ;
 
                     _untracked_files.clear () ;
                     update_list_model_tree_view () ;
@@ -100,7 +102,7 @@ public class GITI.GridUntracked : Gtk.Grid {
 
         btn_add.set_image (btn_add_img) ;
         btn_add.set_relief (Gtk.ReliefStyle.NONE) ;
-        btn_add.set_tooltip_markup ("add") ;
+        btn_add.set_tooltip_markup ("Stage files") ;
         btn_add.clicked.connect (save_stash_changes) ;
 
         actionbar_footer.height_request = 30 ;
