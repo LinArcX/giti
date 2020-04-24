@@ -36,7 +36,8 @@ public class GITI.GridStaged : Gtk.Grid {
     public Ggit.Signature ? get_verified_committer ()
     {
         try {
-            return new Ggit.Signature.now ("linarcx", "linarcx@riseup.net") ;
+            return new Ggit.Signature.now (GITI.HeaderBar._user_name,
+                                           GITI.HeaderBar._user_email) ;
         } catch ( Error e ) {
             critical ("Error git-repo open: %s", e.message) ;
             return null ;

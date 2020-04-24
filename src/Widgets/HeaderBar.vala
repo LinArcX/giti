@@ -19,6 +19,11 @@ public class GITI.HeaderBar : Gtk.HeaderBar {
     public GITI.GridStaged _grid_staged { get ; set ; }
     public GITI.GridUntracked _grid_untracked { get ; set ; }
 
+    public Ggit.Config _git_config ;
+
+    public static string _user_name ;
+    public static string _user_email ;
+
     public HeaderBar (GITI.Window window) {
         Object (
             main_window: window
@@ -153,6 +158,12 @@ public class GITI.HeaderBar : Gtk.HeaderBar {
         }
     }
 
+    private void fetch_git_config() {
+        _git_config = new Ggit.Config.default () ;
+        _user_name = _git_config.get_entry ("user.name").get_value () ;
+        _user_email = _git_config.get_entry ("user.email").get_value () ;
+    }
+
     void item_changed(Gtk.ComboBox combo) {
         _grid_untracked.load_page (_paths[combo.get_active ()]) ;
         _grid_staged.load_page (_paths[combo.get_active ()]) ;
@@ -213,6 +224,8 @@ public class GITI.HeaderBar : Gtk.HeaderBar {
         setup_stack_switcher () ;
 
         setup_libgit () ;
+        fetch_git_config () ;
+
         setup_grid_items () ;
     }
 }
