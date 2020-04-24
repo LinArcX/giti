@@ -117,6 +117,7 @@ public class GITI.GridUntracked : Gtk.Grid {
     private void setup_grid_in_stack() {
         main_window._stack.add_titled (grid, "untracked", "Untracked") ;
         main_window._stack.set_focus_child.connect ((e) => {
+            load_page (_new_full_path) ;
             // print (main_window.stack.get_visible_child_name ()) ;
         }) ;
     }
