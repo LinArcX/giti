@@ -17,7 +17,7 @@ namespace GITI{
         }
 
         private void set_settings() {
-            set_default_size (350, 80) ;
+            set_default_size (750, 430) ;
             window_position = Gtk.WindowPosition.CENTER ;
 
             _settings = new GLib.Settings ("com.github.linarcx.giti") ;

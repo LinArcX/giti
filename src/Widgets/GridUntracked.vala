@@ -3,7 +3,7 @@ public class GITI.GridUntracked : Gtk.Grid {
     public GITI.Window main_window { get ; construct ; }
     public Ggit.Repository m_repo { get ; construct ; }
     public Ggit.Repository p_repo { get ; set ; }
-    string _path ;
+    string _full_path ;
 
     Gee.ArrayList<string> list_untracked = new Gee.ArrayList<string> () ;
 
@@ -68,14 +68,11 @@ public class GITI.GridUntracked : Gtk.Grid {
 
     public void load_page(string path) {
         list_untracked.clear () ;
-        _path = path ;
-        // if( list_untracked.size > 0 ){
-        // }
+        _full_path = path ;
 
         File p_repo_path = File.new_for_path (path) ;
         try {
             p_repo = Ggit.Repository.open (p_repo_path) ;
-            // print (p_repo_path.get_basename () + "\n") ;
             p_repo.file_status_foreach (null, check_each_git_status) ;
         } catch ( GLib.Error e ) {
             critical ("Error git-repo open: %s", e.message) ;
@@ -90,7 +87,7 @@ public class GITI.GridUntracked : Gtk.Grid {
 
         for( int i = 0 ; i < list_untracked.size ; i++ ){
             try {
-                File file_untracked = File.new_for_path (_path + "/" + list_untracked[i]) ;
+                File file_untracked = File.new_for_path (_full_path + "/" + list_untracked[i]) ;
 
                 index.add_file (file_untracked) ;
                 index.write () ;
