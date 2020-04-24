@@ -28,6 +28,7 @@ public class GITI.GridUntracked : Gtk.Grid {
     private int check_status_for_each_file(string file_name, Ggit.StatusFlags status) {
         if( status == Ggit.StatusFlags.WORKING_TREE_NEW
             || status == Ggit.StatusFlags.WORKING_TREE_MODIFIED ){
+            // || status == Ggit.StatusFlags.WORKING_TREE_DELETED ){
             _untracked_files.add (file_name) ;
         }
         return 0 ;

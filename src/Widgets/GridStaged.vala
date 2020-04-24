@@ -26,6 +26,8 @@ public class GITI.GridStaged : Gtk.Grid {
 
     private int check_status_for_each_file(string file_name, Ggit.StatusFlags status) {
         if( status == Ggit.StatusFlags.INDEX_NEW ){
+            // || status == Ggit.StatusFlags.INDEX_MODIFIED
+            // || status == Ggit.StatusFlags.INDEX_DELETED ){
             _staged_files.add (file_name) ;
         }
         return 0 ;
@@ -96,19 +98,19 @@ public class GITI.GridStaged : Gtk.Grid {
                 }
 
                 for( int i = 0 ; i < _staged_files.size ; i++ ){
-                    File file_staged = File.new_for_path (_new_full_path + "/" + _staged_files[i]) ;
                     commitoid = _new_repo.create_commit ("HEAD",
                                                          sig,
                                                          sig,
                                                          null,
-                                                         "commit " + _staged_files[i],
+                                                         "dumb commit ",
                                                          tree,
                                                          parents) ;
-                    head.set_target (commitoid, "log") ;
 
                     // update list-model and tree-view
-                    _untracked_files.clear () ;
+                    _staged_files.clear () ;
                     update_list_model_tree_view () ;
+
+                    head.set_target (commitoid, "log") ;
                 }
             } catch ( GLib.Error e ) {
                 critical ("Error git (get-commit): %s", e.message) ;
