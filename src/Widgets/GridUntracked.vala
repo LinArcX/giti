@@ -33,22 +33,28 @@ public class GITI.GridUntracked : Gtk.Grid {
     }
 
     private void save_stash_changes() {
-        Ggit.Index index ;
-        index = _new_repo.get_index () ;
+        try {
+            Ggit.Index index ;
+            index = _new_repo.get_index () ;
 
-        for( int i = 0 ; i < _untracked_files.size ; i++ ){
-            try {
-                File file_untracked = File.new_for_path (_new_full_path + "/" + _untracked_files[i]) ;
+            for( int i = 0 ; i < _untracked_files.size ; i++ ){
+                try {
+                    File file_untracked = File.new_for_path (_new_full_path + "/" + _untracked_files[i]) ;
 
-                index.add_file (file_untracked) ;
-                index.write () ;
+                    index.add_file (file_untracked) ;
+                    index.write () ;
 
-                _untracked_files.clear () ;
-                update_list_model_tree_view () ;
-            } catch ( GLib.Error e ) {
-                critical ("Error git-status: %s", e.message) ;
+                    _untracked_files.clear () ;
+                    update_list_model_tree_view () ;
+                } catch ( GLib.Error e ) {
+                    critical ("Error git (index-write): %s", e.message) ;
+                }
             }
+
+        } catch ( GLib.Error e ) {
+            critical ("Error git (get-index): %s", e.message) ;
         }
+
     }
 
     public void load_page(string path) {
