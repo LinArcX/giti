@@ -41,7 +41,7 @@ public class GITI.WelcomePage : Gtk.Grid {
                 print ("This is a git directory.\n") ;
                 update_screen (full_path) ;
             } else {
-                GITI.Util.show_notification (full_path, "This isn't a git directory!") ;
+                GITI.Util.show_notification (main_window.app, full_path, "This isn't a git directory!") ;
             }
             break ;
         case Gtk.ResponseType.CANCEL:

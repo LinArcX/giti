@@ -65,7 +65,7 @@ public class GITI.HeaderBar : Gtk.HeaderBar {
                     _list_store.set (iter, Column.DIRNAME, directory_name) ;
                 }
             } else {
-                GITI.Util.show_notification (full_path, "This isn't a git directory!") ;
+                GITI.Util.show_notification (main_window.app, full_path, "This isn't a git directory!") ;
             }
             break ;
         case Gtk.ResponseType.CANCEL:

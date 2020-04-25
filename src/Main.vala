@@ -1,4 +1,4 @@
 public static int main(string[] args) {
-    var app = new GITI.Application () ;
+    var app = new Application () ;
     return app.run (args) ;
 }
