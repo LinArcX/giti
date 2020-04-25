@@ -124,53 +124,20 @@ public class GITI.HeaderBar : Gtk.HeaderBar {
         return button ;
     }
 
-    public void ShowAboutDialog() {
-        Gtk.AboutDialog dialog = new Gtk.AboutDialog () ;
-        dialog.set_destroy_with_parent (true) ;
-        dialog.set_transient_for (this.main_window) ;
-        dialog.set_modal (true) ;
-
-        dialog.authors = { "LinArcX", "LinArcX" } ;
-        dialog.documenters = null ;
-        dialog.translator_credits = null ;
-
-        dialog.program_name = "giti" ;
-        dialog.comments = "Permanent observer of your git directories" ;
-        dialog.copyright = "Copyright (C) 2007 Free Software Foundation, Inc" ;
-        dialog.version = "1.0.0" ;
-
-        dialog.license_type = Gtk.License.GPL_3_0_ONLY ;
-        dialog.wrap_license = true ;
-
-        dialog.website = "https://github.com/LinArcX/giti" ;
-        dialog.website_label = "https://github.com/LinArcX/giti" ;
-
-        dialog.response.connect ((response_id) => {
-            if( response_id == Gtk.ResponseType.CANCEL || response_id == Gtk.ResponseType.DELETE_EVENT ){
-                dialog.hide_on_delete () ;
-            }
-        }) ;
-
-        // Show the dialog:
-        dialog.present () ;
-    }
-
     private void setup_menu_items() {
-        var new_window_item = new_menuitem ("Add New Directory", "<Control>n") ;
-        var close_application_item = new_menuitem ("Close Applicatoin", "<Control>q") ;
-        var about_item = new_menuitem ("About", "<Control>h") ;
-        about_item.clicked.connect (() => {
-            ShowAboutDialog () ;
-        }) ;
+        var about_menu_item = new_menuitem ("About", "F1") ;
+        about_menu_item.action_name = main_window.ACTION_PREFIX + main_window.ACTION_ABOUT ;
+
+        var quit_menu_item = new_menuitem ("Close Applicatoin", "<Control>q") ;
+        quit_menu_item.action_name = main_window.ACTION_PREFIX + main_window.ACTION_QUIT ;
 
         var menu_grid = new Gtk.Grid () ;
         menu_grid.expand = true ;
         menu_grid.margin_top = menu_grid.margin_bottom = 6 ;
         menu_grid.orientation = Gtk.Orientation.VERTICAL ;
 
-        menu_grid.attach (new_window_item, 0, 1, 1, 1) ;
-        menu_grid.attach (close_application_item, 0, 2, 1, 1) ;
-        menu_grid.attach (about_item, 0, 3, 1, 1) ;
+        menu_grid.attach (about_menu_item, 0, 1, 1, 1) ;
+        menu_grid.attach (quit_menu_item, 0, 2, 1, 1) ;
         menu_grid.show_all () ;
 
         var open_menu = new Gtk.MenuButton () ;

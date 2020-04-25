@@ -6,7 +6,6 @@ namespace GITI{
         public Gtk.Application app { get ; set ; }
 
         public GITI.HeaderBar _main_header_bar { get ; set ; }
-
         public GITI.WelcomePage _welcome_page { get ; set ; }
         public GITI.WelcomeHeaderBar _welcome_header_bar { get ; set ; }
 
@@ -14,6 +13,62 @@ namespace GITI{
             Object (
                 application: app,
                 app: app) ;
+        }
+
+        public const string ACTION_GROUP_PREFIX = "win" ;
+        public const string ACTION_PREFIX = ACTION_GROUP_PREFIX + "." ;
+        public const string ACTION_ABOUT = "about" ;
+        public const string ACTION_QUIT = "quit" ;
+
+        private static Gee.MultiMap<string, string> action_accelerators = new Gee.HashMultiMap<string, string> () ;
+
+        private const ActionEntry[] ACTION_ENTRIES = {
+            { ACTION_ABOUT, on_about },
+            { ACTION_QUIT, on_quit },
+        } ;
+
+        static construct {
+            action_accelerators[ACTION_ABOUT] = "F1" ;
+            action_accelerators[ACTION_QUIT] = "<Control>q" ;
+        }
+
+        private void on_about() {
+            Gtk.AboutDialog dialog = new Gtk.AboutDialog () ;
+            dialog.set_destroy_with_parent (true) ;
+            dialog.set_transient_for (this) ;
+            dialog.set_modal (true) ;
+            dialog.logo_icon_name = "com.github.linarcx.giti" ;
+
+            dialog.authors = { "LinArcX", "LinArcX" } ;
+            dialog.documenters = null ;
+            dialog.translator_credits = null ;
+
+            dialog.program_name = "giti" ;
+            dialog.comments = "Permanent observer of your git directories" ;
+            dialog.copyright = "Copyright (C) 2007 Free Software Foundation, Inc" ;
+            dialog.version = "1.0.0" ;
+
+            dialog.license_type = Gtk.License.GPL_3_0_ONLY ;
+            dialog.wrap_license = true ;
+
+            dialog.website = "https://github.com/LinArcX/giti" ;
+            dialog.website_label = "https://github.com/LinArcX/giti" ;
+
+            dialog.response.connect ((response_id) => {
+                if( response_id == Gtk.ResponseType.CANCEL || response_id == Gtk.ResponseType.DELETE_EVENT ){
+                    dialog.hide_on_delete () ;
+                }
+            }) ;
+
+            // Show the dialog:
+            dialog.present () ;
+
+        }
+
+        private void on_quit() {
+            print ("Bye dude! Take care...") ;
+            before_destroy () ;
+            close () ;
         }
 
         private void set_settings() {
@@ -52,6 +107,15 @@ namespace GITI{
         }
 
         construct {
+            add_action_entries (ACTION_ENTRIES, this) ;
+
+            foreach( var action in action_accelerators.get_keys ()){
+                ((Gtk.Application)GLib.Application.get_default ()).set_accels_for_action (
+                    ACTION_PREFIX + action,
+                    action_accelerators[action].to_array ()
+                    ) ;
+            }
+
             set_settings () ;
 
             delete_event.connect (e => {
