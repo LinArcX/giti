@@ -18,8 +18,8 @@ I rarely pushed my changes to github/gitlab, since i didn't thought someday my m
 
 After that tragic event, i decided to push my changes regularly. But i had still one issue.
 
-I didn't know which projects have staged files or untracked files.
-I wanted a solution to list me my favorite projects and say which files changed and which of them are ready to commit.
+I didn't know which projects have staged files or untracked files.(Except by examining each of them separately)
+I wanted a solution to list me my favorite projects and tell me which files changed and which of them are ready to commit.
 
 This is exactly when i created giti.
 
