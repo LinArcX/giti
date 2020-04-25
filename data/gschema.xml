@@ -2,22 +2,22 @@
 <schemalist>
     <schema path="/com/github/linarcx/giti/" id="com.github.linarcx.giti">
         <key name="pos-x" type="i">
-            <default>360</default>
+            <default>345</default>
             <summary>Horizontal position</summary>
             <description>The saved horizontal position of application</description>
         </key>
         <key name="pos-y" type="i">
-            <default>360</default>
+            <default>155</default>
             <summary>Vertical position</summary>
             <description>The saved vertical position of application</description>
         </key>
         <key name="window-width" type="i">
-            <default>400</default>
+            <default>670</default>
             <summary>Window width</summary>
             <description>The width of applicatin window</description>
         </key>
         <key name="window-height" type="i">
-            <default>300</default>
+            <default>370</default>
             <summary>Window heigth</summary>
             <description>The heigth of applicatin window</description>
         </key>
