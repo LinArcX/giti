@@ -48,11 +48,12 @@ public class GITI.GridStaged : Gtk.Grid {
         // First stage files(by index) and then commit them.
         // Unless you have a commit, without any file including!
         Ggit.Index index ;
-        try {
+
+        if( _new_repo == null ){
+            _new_full_path = init_repo.get_workdir ().get_path () ;
+            index = init_repo.get_index () ;
+        } else {
             index = _new_repo.get_index () ;
-        } catch ( GLib.Error e ) {
-            critical ("Error git (repo.get_index()): %s", e.message) ;
-            return ;
         }
 
         for( int i = 0 ; i < _staged_files.size ; i++ ){
@@ -75,16 +76,22 @@ public class GITI.GridStaged : Gtk.Grid {
 
         // Now you can commit the staged files
         try {
+            Ggit.Tree tree ;
             Ggit.OId commitoid ;
             Ggit.Ref ? head = null ;
             Ggit.Commit ? parent = null ;
             var sig = get_verified_committer () ;
-            Ggit.Tree tree ;
+
+            if( _new_repo == null ){
+                head = init_repo.get_head () ;
+                tree = init_repo.lookup_tree (treeoid) ;
+            } else {
+                head = _new_repo.get_head () ;
+                tree = _new_repo.lookup_tree (treeoid) ;
+            }
 
             try {
-                head = _new_repo.get_head () ;
                 parent = head.lookup () as Ggit.Commit ;
-                tree = _new_repo.lookup_tree (treeoid) ;
             } catch ( GLib.Error e ) {
                 critical ("Error git (head.lookup() or repo.lookup_tree()): %s", e.message) ;
                 return ;
@@ -99,13 +106,15 @@ public class GITI.GridStaged : Gtk.Grid {
                 }
 
                 for( int i = 0 ; i < _staged_files.size ; i++ ){
-                    commitoid = _new_repo.create_commit ("HEAD",
-                                                         sig,
-                                                         sig,
-                                                         null,
-                                                         commit_message,
-                                                         tree,
-                                                         parents) ;
+                    if( _new_repo == null ){
+                        commitoid = init_repo.create_commit ("HEAD", sig, sig,
+                                                             null, commit_message,
+                                                             tree, parents) ;
+                    } else {
+                        commitoid = _new_repo.create_commit ("HEAD", sig, sig,
+                                                             null, commit_message,
+                                                             tree, parents) ;
+                    }
 
                     // update list-model and tree-view
                     _staged_files.clear () ;

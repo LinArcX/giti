@@ -33,11 +33,17 @@ public class GITI.GridUntracked : Gtk.Grid {
         return 0 ;
     }
 
-    private void save_stash_changes() {
-        try {
-            Ggit.Index index ;
-            index = _new_repo.get_index () ;
+    private void stage_changes() {
+        Ggit.Index index ;
 
+        if( _new_repo == null ){
+            index = init_repo.get_index () ;
+            _new_full_path = init_repo.get_workdir ().get_path () ;
+        } else {
+            index = _new_repo.get_index () ;
+        }
+
+        try {
             for( int i = 0 ; i < _untracked_files.size ; i++ ){
                 try {
                     File file_untracked = File.new_for_path (_new_full_path + "/" + _untracked_files[i]) ;
@@ -55,7 +61,6 @@ public class GITI.GridUntracked : Gtk.Grid {
         } catch ( GLib.Error e ) {
             critical ("Error git (get-index): %s", e.message) ;
         }
-
     }
 
     public void load_page(string path) {
@@ -102,7 +107,7 @@ public class GITI.GridUntracked : Gtk.Grid {
         btn_add.set_image (btn_add_img) ;
         btn_add.set_relief (Gtk.ReliefStyle.NONE) ;
         btn_add.set_tooltip_markup ("Stage files") ;
-        btn_add.clicked.connect (save_stash_changes) ;
+        btn_add.clicked.connect (stage_changes) ;
 
         actionbar_footer.height_request = 30 ;
         actionbar_footer.pack_end (btn_add) ;
