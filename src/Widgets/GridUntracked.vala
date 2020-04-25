@@ -4,7 +4,6 @@ public class GITI.GridUntracked : Gtk.Grid {
         ID,
         FILE
     }
-    public Ggit.OId treeoid ;
 
     public GITI.Window main_window { get ; construct ; }
     public Ggit.Repository _new_repo { get ; set ; }
@@ -45,7 +44,6 @@ public class GITI.GridUntracked : Gtk.Grid {
 
                     index.add_file (file_untracked) ;
                     index.write () ;
-                    treeoid = index.write_tree () ;
 
                     _untracked_files.clear () ;
                     update_list_model_tree_view () ;
