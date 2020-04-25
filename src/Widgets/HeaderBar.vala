@@ -126,10 +126,10 @@ public class GITI.HeaderBar : Gtk.HeaderBar {
 
     private void setup_menu_items() {
         var about_menu_item = new_menuitem ("About", "F1") ;
-        about_menu_item.action_name = main_window.ACTION_PREFIX + main_window.ACTION_ABOUT ;
+        about_menu_item.action_name = GITI.Window.ACTION_PREFIX + GITI.Window.ACTION_ABOUT ;
 
         var quit_menu_item = new_menuitem ("Close Applicatoin", "<Control>q") ;
-        quit_menu_item.action_name = main_window.ACTION_PREFIX + main_window.ACTION_QUIT ;
+        quit_menu_item.action_name = GITI.Window.ACTION_PREFIX + GITI.Window.ACTION_QUIT ;
 
         var menu_grid = new Gtk.Grid () ;
         menu_grid.expand = true ;
@@ -162,9 +162,14 @@ public class GITI.HeaderBar : Gtk.HeaderBar {
     }
 
     private void fetch_git_config() {
-        _git_config = new Ggit.Config.default () ;
-        _user_name = _git_config.get_entry ("user.name").get_value () ;
-        _user_email = _git_config.get_entry ("user.email").get_value () ;
+        try {
+            _git_config = new Ggit.Config.default () ;
+            _user_name = _git_config.get_entry ("user.name").get_value () ;
+            _user_email = _git_config.get_entry ("user.email").get_value () ;
+        } catch ( GLib.Error e ) {
+            critical ("Error git (get configs): %s", e.message) ;
+        }
+
     }
 
     void item_changed(Gtk.ComboBox combo) {

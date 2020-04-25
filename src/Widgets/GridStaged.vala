@@ -44,7 +44,7 @@ public class GITI.GridStaged : Gtk.Grid {
         }
     }
 
-    private void commit_changed() {
+    private void commit_files(string commit_message) {
         // First stage files(by index) and then commit them.
         // Unless you have a commit, without any file including!
         Ggit.Index index ;
@@ -103,7 +103,7 @@ public class GITI.GridStaged : Gtk.Grid {
                                                          sig,
                                                          sig,
                                                          null,
-                                                         "dumb commit ",
+                                                         commit_message,
                                                          tree,
                                                          parents) ;
 
@@ -137,6 +137,43 @@ public class GITI.GridStaged : Gtk.Grid {
         update_list_model_tree_view () ;
     }
 
+    private void get_commit_message() {
+        var commit_dialog = new Gtk.Dialog () ;
+
+        commit_dialog.deletable = false ;
+        commit_dialog.resizable = false ;
+        commit_dialog.default_width = 400 ;
+        commit_dialog.decorated = true ;
+        commit_dialog.border_width = 8 ;
+
+        var content_area = commit_dialog.get_content_area () ;
+
+        var lbl_commit = new Gtk.Label ("Commit message:") ;
+        lbl_commit.set_justify (Gtk.Justification.LEFT) ;
+        lbl_commit.halign = Gtk.Align.START ;
+        lbl_commit.valign = Gtk.Align.CENTER ;
+
+        var txt_commit_message = new Gtk.TextView () ;
+        txt_commit_message.height_request = 100 ;
+        txt_commit_message.wrap_mode = Gtk.WrapMode.WORD ;
+
+        var apply_button = new Gtk.Button.with_label (("Commit")) ;
+        apply_button.width_request = 400 ;
+        apply_button.halign = Gtk.Align.CENTER ;
+        apply_button.get_style_context ().add_class ("suggested-action") ;
+        apply_button.clicked.connect (() => {
+            // print () ;
+            commit_files (txt_commit_message.buffer.text) ;
+            commit_dialog.close () ;
+        }) ;
+
+        content_area.pack_start (lbl_commit) ;
+        content_area.pack_start (txt_commit_message) ;
+        content_area.pack_start (apply_button) ;
+        commit_dialog.show_all () ;
+        commit_dialog.present () ;
+    }
+
     void setup_treeview() {
         update_list_model_tree_view () ;
 
@@ -166,7 +203,7 @@ public class GITI.GridStaged : Gtk.Grid {
         btn_add.set_image (btn_add_img) ;
         btn_add.set_relief (Gtk.ReliefStyle.NONE) ;
         btn_add.set_tooltip_markup ("Commit") ;
-        btn_add.clicked.connect (commit_changed) ;
+        btn_add.clicked.connect (get_commit_message) ;
 
         actionbar_footer.height_request = 30 ;
         actionbar_footer.pack_end (btn_add) ;
@@ -222,6 +259,3 @@ public class GITI.GridStaged : Gtk.Grid {
         update_list_model_tree_view () ;
     }
 }
-
-// print ("Head: " + head.get_name ()) ;
-// tree = parent.get_tree () ;
