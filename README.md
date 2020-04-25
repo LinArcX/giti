@@ -46,6 +46,9 @@ And finally, run it:
 
 `com.github.linarcx.giti`
 
+### Tip for Windows-manager's Users
+Notice that, giti uses [GLib.Notification](https://valadoc.org/gio-2.0/GLib.Notification.html) internally. So users should install a `notification agent` to get notificaitons. (like: notify-osd, ...)
+
 ## TODO
 - [ ] Remember the theme and default directory.(gsettings)
 - [ ] Revert back latest commit to stage area.(git reset --soft HEAD^)
