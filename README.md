@@ -29,9 +29,6 @@ Well, it's super easy to find out what does gitti do as said in repo description
 2. If those directories have files that are in __untracked__ mode or in __staged__ mode, giti will show those file in separate tabs called: __Untracked__ and __Staged__, Respectively.
 3. You can stage untracked files and also commit staged files by pressing buttons that exist in the bottom of each page.
 
-I'm going to implement a feature that notify user whenever one of his repositories changed. So you don't need to ckeck giti everytime.
-Just read the notification and decide to we
-
 ## Nah, I don't like to work with software that use git mysteriously. Git works fine as is.
 No one says that git doesn't work!
 I understand that it'll be hard to use softwares that work with sensitive data like repositories.
