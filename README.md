@@ -14,7 +14,7 @@
 I had many projects on my machine.
 Some of them were managed by git.
 After a while, I accidentally lost all of my data.
-I rarely pushed my changes to github/gitlab, since i didn't thought someday my machine will broke and all of my efforts will be destroyed!
+I rarely pushed my changes to github/gitlab, since i didn't thought someday my machine will broke and all of my efforts will be destroyed! (TBH, i was a lazy man!)
 
 After that tragic event, i decided to push my changes regularly. But i had still one issue.
 
@@ -31,6 +31,17 @@ Well, it's super easy to find out what does gitti do as said in repo description
 
 I'm going to implement a feature that notify user whenever one of his repositories changed. So you don't need to ckeck giti everytime.
 Just read the notification and decide to we
+
+## Nah, I don't like to work with software that use git mysteriously. Git works fine as is.
+No one says that git doesn't work!
+I understand that it'll be hard to use softwares that work with sensitive data like repositories.
+
+My recommendation is to use giti with fake repositories, or better than that read the source code to find out the logic behind it.
+giti uses libgit2-glib binding in vala language called [Ggit](https://valadoc.org/libgit2-glib-1.0/Ggit.html) to list untracked and staged files.
+
+The whole point is having a tool that __monitor__ your directories and notify you about latest changes.
+I wanted to solve my issue. Hope it'll solve other people's issues too.
+
 
 ## Installation
 ### Install it from source
@@ -68,7 +79,7 @@ https://github.com/void-linux/void-packages/pull/21327
 Notice that, giti uses [GLib.Notification](https://valadoc.org/gio-2.0/GLib.Notification.html) internally. So users should install a `notification agent` to get notificaitons. (like: notify-osd, ...)
 
 ## TODO
-- [ ] Periodically monitory changes in repos and send system notificatoin.
+- [ ] Periodically monitor changes in repos and send system notification.
 - [ ] Create statistic page that will show all changes in all directories at a glance!
 - [ ] Remember the theme and default directory. (via: gsettings)
 - [ ] Revert back latest commit to stage area. (via: `git reset --soft HEAD^`)
