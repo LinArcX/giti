@@ -94,8 +94,8 @@ namespace GITI{
             sep_hz_2.margin = 10 ;
 
             // Reset settings
-            var btn_reset_settings = new Gtk.Button.with_label ("Reset to default!") ;
-            btn_reset_settings.get_style_context ().add_class ("suggested-action") ;
+            var btn_reset_settings = new Gtk.Button.with_label ("Reset to default settings") ;
+            btn_reset_settings.get_style_context ().add_class ("destructive-action") ; // blue: "suggested-action"
 
             content_area.add (lbl_font) ;
             content_area.add (btn_font) ;
