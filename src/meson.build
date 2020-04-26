@@ -11,6 +11,7 @@ executable(
     'Widgets/GridUntracked.vala',
     'Widgets/GridStaged.vala',
     'Util/Util.vala',
+    'Util/AsyncStatus.vala',
 
     dependencies: [
         dependency('gtk+-3.0'),

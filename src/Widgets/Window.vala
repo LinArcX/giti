@@ -122,6 +122,10 @@ namespace GITI{
                 _main_header_bar = new GITI.HeaderBar (this) ;
                 set_titlebar (_main_header_bar) ;
                 add (_stack) ;
+
+                // run background status checking..
+                var async_status = new GITI.AsyncStatus (this) ;
+                async_status.run_background_service () ;
             }
         }
 
