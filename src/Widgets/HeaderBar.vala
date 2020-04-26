@@ -141,6 +141,9 @@ public class GITI.HeaderBar : Gtk.HeaderBar {
     }
 
     private void setup_menu_items() {
+        var preferences_menu_item = new_menuitem ("Preferences", "<Control>p") ;
+        preferences_menu_item.action_name = GITI.Window.ACTION_PREFIX + GITI.Window.ACTION_PREFERENCES ;
+
         var about_menu_item = new_menuitem ("About", "F1") ;
         about_menu_item.action_name = GITI.Window.ACTION_PREFIX + GITI.Window.ACTION_ABOUT ;
 
@@ -152,8 +155,9 @@ public class GITI.HeaderBar : Gtk.HeaderBar {
         menu_grid.margin_top = menu_grid.margin_bottom = 6 ;
         menu_grid.orientation = Gtk.Orientation.VERTICAL ;
 
-        menu_grid.attach (about_menu_item, 0, 1, 1, 1) ;
-        menu_grid.attach (quit_menu_item, 0, 2, 1, 1) ;
+        menu_grid.attach (preferences_menu_item, 0, 1, 1, 1) ;
+        menu_grid.attach (about_menu_item, 0, 2, 1, 1) ;
+        menu_grid.attach (quit_menu_item, 0, 3, 1, 1) ;
         menu_grid.show_all () ;
 
         var open_menu = new Gtk.MenuButton () ;

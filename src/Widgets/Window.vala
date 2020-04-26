@@ -36,19 +36,79 @@ namespace GITI{
 
         public const string ACTION_GROUP_PREFIX = "win" ;
         public const string ACTION_PREFIX = ACTION_GROUP_PREFIX + "." ;
+        public const string ACTION_PREFERENCES = "preferences" ;
         public const string ACTION_ABOUT = "about" ;
         public const string ACTION_QUIT = "quit" ;
 
         private static Gee.MultiMap<string, string> action_accelerators = new Gee.HashMultiMap<string, string> () ;
 
         private const ActionEntry[] ACTION_ENTRIES = {
+            { ACTION_PREFERENCES, on_preferences },
             { ACTION_ABOUT, on_about },
             { ACTION_QUIT, on_quit },
         } ;
 
         static construct {
+            action_accelerators[ACTION_PREFERENCES] = "<Control>p" ;
             action_accelerators[ACTION_ABOUT] = "F1" ;
             action_accelerators[ACTION_QUIT] = "<Control>q" ;
+        }
+
+        private void on_preferences() {
+            var preferences_dialog = new Gtk.Dialog.with_buttons (
+                "Title",
+                this,
+                Gtk.DialogFlags.MODAL |
+                Gtk.DialogFlags.DESTROY_WITH_PARENT |
+                Gtk.DialogFlags.USE_HEADER_BAR
+                ) ;
+            preferences_dialog.resizable = false ;
+            preferences_dialog.default_width = 300 ;
+            preferences_dialog.default_height = 170 ;
+            preferences_dialog.border_width = 5 ;
+            // preferences_dialog.deletable = false ;
+            // preferences_dialog.decorated = true ;
+
+            var content_area = preferences_dialog.get_content_area () ;
+
+            // Font
+            var lbl_font = new Gtk.Label ("Font:") ;
+            lbl_font.set_justify (Gtk.Justification.LEFT) ;
+            lbl_font.halign = Gtk.Align.START ;
+            lbl_font.valign = Gtk.Align.START ;
+
+            var btn_font = new Gtk.FontButton () ;
+
+            var sep_hz = new Gtk.Separator (Gtk.Orientation.HORIZONTAL) ;
+            sep_hz.margin = 10 ;
+
+            // Notification period
+            var lbl_commit = new Gtk.Label ("Send notification every(minute):") ;
+            lbl_commit.set_justify (Gtk.Justification.LEFT) ;
+            lbl_commit.halign = Gtk.Align.START ;
+            lbl_commit.valign = Gtk.Align.START ;
+
+            var spb_notification_period = new Gtk.SpinButton.with_range (0, 180, 1) ;
+
+            var sep_hz_2 = new Gtk.Separator (Gtk.Orientation.HORIZONTAL) ;
+            sep_hz_2.margin = 10 ;
+
+            // Reset settings
+            var btn_reset_settings = new Gtk.Button.with_label ("Reset to default!") ;
+            btn_reset_settings.get_style_context ().add_class ("suggested-action") ;
+
+            content_area.add (lbl_font) ;
+            content_area.add (btn_font) ;
+            content_area.add (sep_hz) ;
+
+            content_area.add (lbl_commit) ;
+            content_area.add (spb_notification_period) ;
+            content_area.add (sep_hz_2) ;
+
+            content_area.add (btn_reset_settings) ;
+
+            preferences_dialog.show_all () ;
+            preferences_dialog.present () ;
         }
 
         private void on_about() {
