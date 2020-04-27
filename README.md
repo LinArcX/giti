@@ -27,9 +27,10 @@ So, This is exactly when i created giti.
 ## How giti works?
 1. You add some git based directories.
 2. If those directories have files that are in __untracked__ mode or in __staged__ mode, giti will show those file in separate tabs called: __Untracked__ and __Staged__, Respectively.
-3. You can stage untracked files and also commit staged files by pressing buttons that exist in the bottom of each page.
+3. You can __stage__ untracked files and also __commit__ staged files by pressing buttons that exist in the bottom of each page.
+4. Giti periodically monitor changes in your repos and send system notifications.(every 10 minutes by default. But you can change it or disable it by setting it to 0)
 
-Tip: giti uses [libgit2-glib](https://github.com/GNOME/libgit2-glib) binding in vala language called [Ggit](https://valadoc.org/libgit2-glib-1.0/Ggit.html) to list untracked and staged files.
+Tip: This application uses [libgit2-glib](https://github.com/GNOME/libgit2-glib) binding in vala language called [Ggit](https://valadoc.org/libgit2-glib-1.0/Ggit.html) to list untracked and staged files.
 
 ## Installation
 ### Install it from source
@@ -67,7 +68,6 @@ https://github.com/void-linux/void-packages/pull/21327
 Notice that, giti uses [GLib.Notification](https://valadoc.org/gio-2.0/GLib.Notification.html) internally. So users should install a `notification agent` to get notificaitons. (like: notify-osd, ...)
 
 ## TODO
-- [ ] Periodically monitor changes in repos and send system notification.
 - [ ] Create statistic page that will show all changes in all directories at a glance!
 - [ ] Remember the theme and default directory. (via: gsettings)
 - [ ] Revert back latest commit to stage area. (via: `git reset --soft HEAD^`)
