@@ -26,16 +26,19 @@ So, This is exactly when i created giti.
 
 ## How giti works?
 1. You add some git based directories.
-2. If those directories have files that are in __untracked__ mode or in __staged__ mode, giti will show those file in separate tabs called: __Untracked__ and __Staged__, Respectively.
-3. You can __stage__ untracked files and also __commit__ staged files by pressing buttons that exist in the bottom of each page.
-4. Giti periodically monitor changes in your repos and send system notifications.(every 10 minutes by default. But you can change it or disable it by setting it to 0)
+2. Giti periodically monitor changes in your repos and send system notifications.(every 10 minutes by default. But you can change it or disable it by setting it to 0)
 <h4 align="left">
     <img src="data/assets/giti_notification.png" align="center" width="400"/>
 </h4>
 
 Tip: This application uses [libgit2-glib](https://github.com/GNOME/libgit2-glib) binding in vala language called [Ggit](https://valadoc.org/libgit2-glib-1.0/Ggit.html) to list untracked and staged files.
 
+### Extra features
+1. Giti can show you __Untracked__ and __Staged__ files in separate tabs.(This will help you to track changes easily)
+2. You can __stage__ untracked files and also __commit__ staged files by pressing buttons that exist in the bottom of each page.
+
 ## Installation
+
 ### Install it from source
 You can install giti by compiling from source, here's the list of dependencies required:
 
