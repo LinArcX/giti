@@ -89,6 +89,7 @@ namespace GITI{
             lbl_commit.valign = Gtk.Align.START ;
 
             var spb_notification_period = new Gtk.SpinButton.with_range (0, 180, 1) ;
+            spb_notification_period.value = (double) (_settings.get_int ("notification-period")) ;
 
             var sep_hz_2 = new Gtk.Separator (Gtk.Orientation.HORIZONTAL) ;
             sep_hz_2.margin = 10 ;
@@ -96,6 +97,10 @@ namespace GITI{
             // Reset settings
             var btn_reset_settings = new Gtk.Button.with_label ("Reset to default settings") ;
             btn_reset_settings.get_style_context ().add_class ("destructive-action") ; // blue: "suggested-action"
+            btn_reset_settings.clicked.connect (() => {
+                _settings.reset ("notification-period") ;
+                spb_notification_period.value = (double) (_settings.get_int ("notification-period")) ;
+            }) ;
 
             content_area.add (lbl_font) ;
             content_area.add (btn_font) ;
@@ -106,6 +111,14 @@ namespace GITI{
             content_area.add (sep_hz_2) ;
 
             content_area.add (btn_reset_settings) ;
+
+            preferences_dialog.close.connect (() => {
+                _settings.set_int ("notification-period", (int) (spb_notification_period.value)) ;
+            }) ;
+
+            preferences_dialog.destroy.connect (() => {
+                _settings.set_int ("notification-period", (int) (spb_notification_period.value)) ;
+            }) ;
 
             preferences_dialog.show_all () ;
             preferences_dialog.present () ;

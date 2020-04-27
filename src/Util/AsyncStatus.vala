@@ -55,7 +55,6 @@ public class GITI.AsyncStatus : GLib.Object {
     }
 
     private bool task() {
-        print ("Notification sent..\n") ;
 
         string[] _list_of_directories = _settings.get_strv ("directories") ;
         foreach( var i in _list_of_directories ){
@@ -63,16 +62,26 @@ public class GITI.AsyncStatus : GLib.Object {
             get_status (i) ;
         }
 
-        GITI.Util.show_notification (main_window.app, "Status",
-                                     "Untracked files: " + untracked_counter.to_string () + ", " +
-                                     "Staged files: " + staged_counter.to_string ()) ;
-        untracked_counter = 0 ;
-        staged_counter = 0 ;
+        if( untracked_counter > 0 || staged_counter > 0 ){
+            print ("Notification sent..\n") ;
+            GITI.Util.show_notification (main_window.app, "Status",
+                                         "Untracked files: " + untracked_counter.to_string () + ", " +
+                                         "Staged files: " + staged_counter.to_string ()) ;
+            untracked_counter = 0 ;
+            staged_counter = 0 ;
+        } else {
+            print ("Your directories are clean.\n") ;
+        }
         return true ; // false terminates timer
     }
 
     async void async_runner() {
-        Timeout.add_seconds (5, task) ;
+        int period = _settings.get_int ("notification-period") ;
+        if( period > 0 ){
+            Timeout.add_seconds (period * 60, task) ;
+        } else {
+            print ("Seems you turned of notification feature!") ;
+        }
     }
 
     public bool run_background_service() {

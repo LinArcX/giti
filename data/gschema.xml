@@ -26,5 +26,10 @@
             <summary>Git directories</summary>
             <description>List of all directories that giti will watch</description>
         </key>
+        <key name="notification-period" type="i">
+            <default>10</default>
+            <summary>Notification period</summary>
+            <description>How many minutes is a warning displayed to the user?</description>
+        </key>
     </schema>
 </schemalist>
