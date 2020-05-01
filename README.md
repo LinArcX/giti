@@ -63,12 +63,11 @@ And finally, run it:
 `com.github.linarcx.giti`
 
 ### Distributions
+#### Arch
+`trizen -S giti-git`
+
 #### Void
-
-There is a work-in-progress Pull-Request:
-
-https://github.com/void-linux/void-packages/pull/21327
-
+There is a work-in-progress [Pull-Request](https://github.com/void-linux/void-packages/pull/21327)
 
 ### Tip for Windows-manager's Users
 Notice that, giti uses [GLib.Notification](https://valadoc.org/gio-2.0/GLib.Notification.html) internally. So users should install a `notification agent` to get notificaitons. (like: notify-osd, ...)
