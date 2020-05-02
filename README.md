@@ -64,7 +64,7 @@ And finally, run it:
 
 ### Distributions
 #### Arch
-`trizen -S giti-git`
+https://aur.archlinux.org/packages/giti-git
 
 #### Void
 There is a work-in-progress [Pull-Request](https://github.com/void-linux/void-packages/pull/21327)
