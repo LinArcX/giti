@@ -82,5 +82,9 @@ It's a persian word meaning universe:
 - [ ] Remember the theme and default directory. (via: gsettings)
 - [ ] Revert back latest commit to stage area. (via: `git reset --soft HEAD^`)
 
+## Donate
+- Monero: `48VdRG9BNePEcrUr6Vx6sJeVz6EefGq5e2F5S9YV2eJtd5uAwjJ7Afn6YeVTWsw6XGS6mXueLywEea3fBPztUbre2Lhia7e`
+<img src="data/assets/monero.png" align="center" />
+
 ## License
 ![License](https://img.shields.io/github/license/LinArcX/giti.svg)
