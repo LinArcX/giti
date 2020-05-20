@@ -83,8 +83,11 @@ It's a persian word meaning universe:
 - [ ] Revert back latest commit to stage area. (via: `git reset --soft HEAD^`)
 
 ## Donate
+- Bitcoin: `13T28Yd37qPtuxwTFPXeG9dWPahwDzWHjy`
+<img src="data/assets/donate/Bitcoin.png" width="200" align="center" />
+
 - Monero: `48VdRG9BNePEcrUr6Vx6sJeVz6EefGq5e2F5S9YV2eJtd5uAwjJ7Afn6YeVTWsw6XGS6mXueLywEea3fBPztUbre2Lhia7e`
-<img src="data/assets/monero.png" align="center" />
+<img src="data/assets/donate/Monero.png" align="center" />
 
 ## License
 ![License](https://img.shields.io/github/license/LinArcX/giti.svg)
