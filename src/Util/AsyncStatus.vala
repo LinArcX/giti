@@ -23,7 +23,7 @@ public class GITI.AsyncStatus : GLib.Object {
     int staged_counter = 0 ;
 
     public GLib.Settings _settings ;
-    public Ggit.Repository _new_repo { get ; set ; }
+    public Ggit.Repository t_new_repo { get ; set ; }
     public GITI.Window main_window { get ; construct ; }
 
     public AsyncStatus (GITI.Window win) {
@@ -47,8 +47,8 @@ public class GITI.AsyncStatus : GLib.Object {
     private void get_status(string _new_full_path) {
         File new_repo_path = File.new_for_path (_new_full_path) ;
         try {
-            _new_repo = Ggit.Repository.open (new_repo_path) ;
-            _new_repo.file_status_foreach (null, check_status_for_each_file) ;
+            t_new_repo = Ggit.Repository.open (new_repo_path) ;
+            t_new_repo.file_status_foreach (null, check_status_for_each_file) ;
         } catch ( GLib.Error e ) {
             critical ("Error git-repo open: %s", e.message) ;
         }

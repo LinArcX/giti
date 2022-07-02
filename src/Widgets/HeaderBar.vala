@@ -30,13 +30,13 @@ public class GITI.HeaderBar : Gtk.HeaderBar {
     public Gtk.ListStore _list_store ;
     public string full_path_except_project_name ;
 
-    public File _current_repo_path { get ; set ; }
-    public Ggit.Repository _current_repo { get ; set ; }
-    private Gtk.ComboBox _cb_directories { get ; set ; }
+    public File tt_current_repo_path { get ; set ; }
+    public Ggit.Repository t_current_repo { get ; set ; }
+    private Gtk.ComboBox t_cb_directories { get ; set ; }
 
     public GITI.Window main_window { get ; construct ; }
-    public GITI.GridStaged _grid_staged { get ; set ; }
-    public GITI.GridUntracked _grid_untracked { get ; set ; }
+    public GITI.GridStaged t_grid_staged { get ; set ; }
+    public GITI.GridUntracked t_grid_untracked { get ; set ; }
 
     public Ggit.Config _git_config ;
 
@@ -193,21 +193,21 @@ public class GITI.HeaderBar : Gtk.HeaderBar {
     }
 
     void item_changed(Gtk.ComboBox combo) {
-        _grid_untracked.load_page (_paths[combo.get_active ()]) ;
-        _grid_staged.load_page (_paths[combo.get_active ()]) ;
+        t_grid_untracked.load_page (_paths[combo.get_active ()]) ;
+        t_grid_staged.load_page (_paths[combo.get_active ()]) ;
     }
 
-    private void setup_cb_directories() {
+    private void setupt_cb_directories() {
         _list_store = new Gtk.ListStore (1, typeof (string)) ;
         update_liststore () ;
-        _cb_directories = new Gtk.ComboBox.with_model (_list_store) ;
+        t_cb_directories = new Gtk.ComboBox.with_model (_list_store) ;
         Gtk.CellRendererText cell = new Gtk.CellRendererText () ;
-        _cb_directories.pack_start (cell, false) ;
-        _cb_directories.set_attributes (cell, "text", Column.DIRNAME) ;
-        _cb_directories.set_active (0) ;
-        _cb_directories.changed.connect (this.item_changed) ;
-        _cb_directories.valign = Gtk.Align.CENTER ;
-        pack_start (_cb_directories) ;
+        t_cb_directories.pack_start (cell, false) ;
+        t_cb_directories.set_attributes (cell, "text", Column.DIRNAME) ;
+        t_cb_directories.set_active (0) ;
+        t_cb_directories.changed.connect (this.item_changed) ;
+        t_cb_directories.valign = Gtk.Align.CENTER ;
+        pack_start (t_cb_directories) ;
     }
 
     private void setup_granite_switch() {
@@ -220,25 +220,25 @@ public class GITI.HeaderBar : Gtk.HeaderBar {
         pack_end (mode_switch) ;
     }
 
-    private void setup_stack_switcher() {
+    private void setupt_stack_switcher() {
         var stackSwitcher = new Gtk.StackSwitcher () ;
-        stackSwitcher.stack = main_window._stack ;
+        stackSwitcher.stack = main_window.t_stack ;
         set_custom_title (stackSwitcher) ;
     }
 
     private void setup_libgit() {
         Ggit.init () ;
-        _current_repo_path = File.new_for_path (_paths[_cb_directories.get_active ()]) ;
+        tt_current_repo_path = File.new_for_path (_paths[t_cb_directories.get_active ()]) ;
         try {
-            _current_repo = Ggit.Repository.open (_current_repo_path) ;
+            t_current_repo = Ggit.Repository.open (tt_current_repo_path) ;
         } catch ( GLib.Error e ) {
             critical ("Error git-repo open: %s", e.message) ;
         }
     }
 
     private void setup_grid_items() {
-        _grid_untracked = new GITI.GridUntracked (main_window, _current_repo) ;
-        _grid_staged = new GITI.GridStaged (main_window, _current_repo) ;
+        t_grid_untracked = new GITI.GridUntracked (main_window, t_current_repo) ;
+        t_grid_staged = new GITI.GridStaged (main_window, t_current_repo) ;
     }
 
     construct {
@@ -247,9 +247,9 @@ public class GITI.HeaderBar : Gtk.HeaderBar {
 
         setup_btn_add_new_folder () ;
         setup_menu_items () ;
-        setup_cb_directories () ;
+        setupt_cb_directories () ;
         setup_granite_switch () ;
-        setup_stack_switcher () ;
+        setupt_stack_switcher () ;
 
         setup_libgit () ;
         fetch_git_config () ;

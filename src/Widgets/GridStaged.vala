@@ -25,7 +25,7 @@ public class GITI.GridStaged : Gtk.Grid {
     }
 
     public GITI.Window main_window { get ; construct ; }
-    public Ggit.Repository _new_repo { get ; set ; }
+    public Ggit.Repository t_new_repo { get ; set ; }
     public Ggit.Repository init_repo { get ; construct ; }
 
     private string _new_full_path ;
@@ -68,11 +68,11 @@ public class GITI.GridStaged : Gtk.Grid {
         // Unless you have a commit, without any file including!
         Ggit.Index index ;
 
-        if( _new_repo == null ){
+        if( t_new_repo == null ){
             _new_full_path = init_repo.get_workdir ().get_path () ;
             index = init_repo.get_index () ;
         } else {
-            index = _new_repo.get_index () ;
+            index = t_new_repo.get_index () ;
         }
 
         for( int i = 0 ; i < _staged_files.size ; i++ ){
@@ -101,12 +101,12 @@ public class GITI.GridStaged : Gtk.Grid {
             Ggit.Commit ? parent = null ;
             var sig = get_verified_committer () ;
 
-            if( _new_repo == null ){
+            if( t_new_repo == null ){
                 head = init_repo.get_head () ;
                 tree = init_repo.lookup_tree (treeoid) ;
             } else {
-                head = _new_repo.get_head () ;
-                tree = _new_repo.lookup_tree (treeoid) ;
+                head = t_new_repo.get_head () ;
+                tree = t_new_repo.lookup_tree (treeoid) ;
             }
 
             try {
@@ -125,12 +125,12 @@ public class GITI.GridStaged : Gtk.Grid {
                 }
 
                 for( int i = 0 ; i < _staged_files.size ; i++ ){
-                    if( _new_repo == null ){
+                    if( t_new_repo == null ){
                         commitoid = init_repo.create_commit ("HEAD", sig, sig,
                                                              null, commit_message,
                                                              tree, parents) ;
                     } else {
-                        commitoid = _new_repo.create_commit ("HEAD", sig, sig,
+                        commitoid = t_new_repo.create_commit ("HEAD", sig, sig,
                                                              null, commit_message,
                                                              tree, parents) ;
                     }
@@ -156,8 +156,8 @@ public class GITI.GridStaged : Gtk.Grid {
 
         File new_repo_path = File.new_for_path (_new_full_path) ;
         try {
-            _new_repo = Ggit.Repository.open (new_repo_path) ;
-            _new_repo.file_status_foreach (null, check_status_for_each_file) ;
+            t_new_repo = Ggit.Repository.open (new_repo_path) ;
+            t_new_repo.file_status_foreach (null, check_status_for_each_file) ;
         } catch ( GLib.Error e ) {
             critical ("Error git-repo open: %s", e.message) ;
         }
@@ -250,9 +250,9 @@ public class GITI.GridStaged : Gtk.Grid {
         grid.attach (actionbar_footer, 0, 1, 1, 50) ;
     }
 
-    private void setup_grid_in_stack() {
-        main_window._stack.add_titled (grid, "staged", "Staged") ;
-        main_window._stack.set_focus_child.connect ((e) => {
+    private void setup_grid_int_stack() {
+        main_window.t_stack.add_titled (grid, "staged", "Staged") ;
+        main_window.t_stack.set_focus_child.connect ((e) => {
             load_page (_new_full_path) ;
         }) ;
     }
@@ -282,7 +282,7 @@ public class GITI.GridStaged : Gtk.Grid {
         setup_action_bar () ;
         setup_scrolled_window () ;
         setup_grid () ;
-        setup_grid_in_stack () ;
+        setup_grid_int_stack () ;
 
         update_list_model_tree_view () ;
     }

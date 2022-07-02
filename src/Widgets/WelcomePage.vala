@@ -29,19 +29,19 @@ public class GITI.WelcomePage : Gtk.Grid {
     }
 
     private void update_screen(string first_directory_path) {
-        remove (main_window._welcome_page) ;
+        remove (main_window.t_welcome_page) ;
 
         main_window.remove (this) ;
         this.destroy () ;
-        main_window.remove (main_window._welcome_header_bar) ;
-        main_window._welcome_header_bar.destroy () ;
+        main_window.remove (main_window.t_welcome_header_bar) ;
+        main_window.t_welcome_header_bar.destroy () ;
 
         string[] m_dirs = {} ;
         m_dirs += first_directory_path ;
         main_window._settings.set_strv ("directories", m_dirs) ;
-        main_window.add (main_window._stack) ;
-        main_window._main_header_bar = new GITI.HeaderBar (main_window) ;
-        main_window.set_titlebar (main_window._main_header_bar) ;
+        main_window.add (main_window.t_stack) ;
+        main_window.t_main_header_bar = new GITI.HeaderBar (main_window) ;
+        main_window.set_titlebar (main_window.t_main_header_bar) ;
         main_window.show_all () ;
         show_all () ;
     }
