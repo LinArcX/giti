@@ -21,12 +21,12 @@ namespace GITI{
     public class Window : Gtk.ApplicationWindow {
 
         public GLib.Settings _settings ;
-        public Gtk.Stack _stack { get ; set ; }
+        public Gtk.Stack t_stack { get ; set ; }
         public Gtk.Application app { get ; set ; }
 
-        public GITI.HeaderBar _main_header_bar { get ; set ; }
-        public GITI.WelcomePage _welcome_page { get ; set ; }
-        public GITI.WelcomeHeaderBar _welcome_header_bar { get ; set ; }
+        public GITI.HeaderBar t_main_header_bar { get ; set ; }
+        public GITI.WelcomePage t_welcome_page { get ; set ; }
+        public GITI.WelcomeHeaderBar t_welcome_header_bar { get ; set ; }
 
         public Window (Application app) {
             Object (
@@ -187,14 +187,14 @@ namespace GITI{
             string[] _list_of_directories = _settings.get_strv ("directories") ;
 
             if( _list_of_directories.length == 0 ){
-                _welcome_page = new GITI.WelcomePage (this) ;
-                _welcome_header_bar = new GITI.WelcomeHeaderBar () ;
-                set_titlebar (_welcome_header_bar) ;
-                add (_welcome_page) ;
+                t_welcome_page = new GITI.WelcomePage (this) ;
+                t_welcome_header_bar = new GITI.WelcomeHeaderBar () ;
+                set_titlebar (t_welcome_header_bar) ;
+                add (t_welcome_page) ;
             } else {
-                _main_header_bar = new GITI.HeaderBar (this) ;
-                set_titlebar (_main_header_bar) ;
-                add (_stack) ;
+                t_main_header_bar = new GITI.HeaderBar (this) ;
+                set_titlebar (t_main_header_bar) ;
+                add (t_stack) ;
 
                 // run background status checking..
                 var async_status = new GITI.AsyncStatus (this) ;
@@ -218,8 +218,8 @@ namespace GITI{
                 return before_destroy () ;
             }) ;
 
-            _stack = new Gtk.Stack () ;
-            _stack.expand = true ;
+            t_stack = new Gtk.Stack () ;
+            t_stack.expand = true ;
 
             setup_screens () ;
             show_all () ;

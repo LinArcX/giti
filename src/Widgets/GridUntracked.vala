@@ -25,7 +25,7 @@ public class GITI.GridUntracked : Gtk.Grid {
     }
 
     public GITI.Window main_window { get ; construct ; }
-    public Ggit.Repository _new_repo { get ; set ; }
+    public Ggit.Repository t_new_repo { get ; set ; }
     public Ggit.Repository init_repo { get ; construct ; }
 
     private string _new_full_path ;
@@ -55,11 +55,11 @@ public class GITI.GridUntracked : Gtk.Grid {
     private void stage_changes() {
         Ggit.Index index ;
 
-        if( _new_repo == null ){
+        if( t_new_repo == null ){
             index = init_repo.get_index () ;
             _new_full_path = init_repo.get_workdir ().get_path () ;
         } else {
-            index = _new_repo.get_index () ;
+            index = t_new_repo.get_index () ;
         }
 
         try {
@@ -88,8 +88,8 @@ public class GITI.GridUntracked : Gtk.Grid {
 
         File new_repo_path = File.new_for_path (_new_full_path) ;
         try {
-            _new_repo = Ggit.Repository.open (new_repo_path) ;
-            _new_repo.file_status_foreach (null, check_status_for_each_file) ;
+            t_new_repo = Ggit.Repository.open (new_repo_path) ;
+            t_new_repo.file_status_foreach (null, check_status_for_each_file) ;
         } catch ( GLib.Error e ) {
             critical ("Error git-repo open: %s", e.message) ;
         }
@@ -145,9 +145,9 @@ public class GITI.GridUntracked : Gtk.Grid {
         grid.attach (actionbar_footer, 0, 1, 1, 50) ;
     }
 
-    private void setup_grid_in_stack() {
-        main_window._stack.add_titled (grid, "untracked", "Untracked") ;
-        main_window._stack.set_focus_child.connect ((e) => {
+    private void setup_grid_int_stack() {
+        main_window.t_stack.add_titled (grid, "untracked", "Untracked") ;
+        main_window.t_stack.set_focus_child.connect ((e) => {
             load_page (_new_full_path) ;
             // print (main_window.stack.get_visible_child_name ()) ;
         }) ;
@@ -178,7 +178,7 @@ public class GITI.GridUntracked : Gtk.Grid {
         setup_action_bar () ;
         setup_scrolled_window () ;
         setup_grid () ;
-        setup_grid_in_stack () ;
+        setup_grid_int_stack () ;
 
         update_list_model_tree_view () ;
     }
